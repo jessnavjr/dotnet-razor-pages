@@ -1,0 +1,11 @@
+<Project>
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <CollectCoverage>true</CollectCoverage>
+    <CoverletOutputFormat>cobertura</CoverletOutputFormat>
+    <Threshold>100</Threshold>
+    <ThresholdType>line,branch,method</ThresholdType>
+    <ThresholdStat>Total</ThresholdStat>
+    <Include>[DotNetRazorPages.Data*]*,[DotNetRazorPages.Services*]*,[DotNetRazorPages.Web*]*</Include>
+    <ExcludeByFile>**/*.g.cs;**/Migrations/*</ExcludeByFile>
+  </PropertyGroup>
+</Project>

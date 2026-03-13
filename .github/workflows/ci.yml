@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore .NET dependencies
+        run: dotnet restore DotNetRazorPages.slnx
+
+      - name: Run .NET tests
+        run: dotnet test DotNetRazorPages.slnx -c Release --no-restore
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: DotNetRazorPages.Web/package-lock.json
+
+      - name: Install web dependencies
+        working-directory: DotNetRazorPages.Web
+        run: npm ci
+
+      - name: Run TypeScript tests
+        working-directory: DotNetRazorPages.Web
+        run: npm run test:ts

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="DotNetRazorPages.Data/DotNetRazorPages.Data.csproj" />
+  <Project Path="DotNetRazorPages.Services/DotNetRazorPages.Services.csproj" />
+  <Project Path="DotNetRazorPages.Tests/DotNetRazorPages.Tests.csproj" />
+  <Project Path="DotNetRazorPages.Web/DotNetRazorPages.Web.csproj" />
+</Solution>
