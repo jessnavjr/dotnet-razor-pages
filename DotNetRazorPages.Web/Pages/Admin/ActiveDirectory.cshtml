@@ -1,4 +1,4 @@
-@page
+@page "/ActiveDirectory"
 @model ActiveDirectoryModel
 @{
     ViewData["Title"] = "Active Directory";
@@ -13,7 +13,7 @@
             <p class="text-muted">Search an on-prem Windows Active Directory user and review core account information and security group memberships.</p>
 
             <div class="card shadow-sm mb-4">
-                <div class="card-header bg-dark text-white">Search User</div>
+                <div class="card-header app-admin-header">Search User</div>
                 <div class="card-body">
                     <form method="post" class="row g-3">
                         <div class="col-md-8">
@@ -39,7 +39,7 @@
             @if (Model.UserResult is not null)
             {
                 <div class="card mb-4">
-                    <div class="card-header bg-success text-white">User Information</div>
+                    <div class="card-header app-admin-header-soft">User Information</div>
                     <div class="card-body">
                         <dl class="row mb-0">
                             <dt class="col-sm-3">Username</dt>
@@ -79,7 +79,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-header bg-primary text-white">Security Group Memberships</div>
+                    <div class="card-header app-admin-header">Security Group Memberships</div>
                     <div class="card-body">
                         @if (Model.UserResult.SecurityGroups.Count == 0)
                         {

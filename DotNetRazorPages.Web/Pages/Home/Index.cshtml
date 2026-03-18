@@ -1,0 +1,191 @@
+﻿@page "/"
+@model IndexModel
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="index-page">
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="mb-1">DotNetRazorPages</h1>
+        <p class="text-muted mb-0">ASP.NET Core 10 &middot; Razor Pages &middot; 3-Layer Architecture</p>
+    </div>
+    <span class="badge bg-success fs-6 px-3 py-2"><i class="bi bi-check-circle me-1"></i> All Systems Operational</span>
+</div>
+
+<div class="alert alert-light border d-flex align-items-center gap-2 mb-4" role="alert">
+    <i class="bi bi-info-circle text-primary fs-5"></i>
+    <span class="text-muted small">@Model.GreetingMessage</span>
+</div>
+
+<!-- Feature Navigation Cards -->
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="bg-primary bg-opacity-10 text-primary rounded p-2 me-3"><i class="bi bi-people fs-4"></i></span>
+                    <h5 class="card-title mb-0">Employees</h5>
+                </div>
+                <p class="card-text text-muted small">Browse and manage the employee directory. Paginated listing with detail view per record.</p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0">
+                <a asp-page="/Employees/Employees" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-arrow-right-circle me-1"></i> View Employees
+                </a>
+            </div>
+        </div>
+    </div>
+
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        var isAdmin = User.Claims
+            .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role || c.Type == "role")
+            .Select(c => c.Value)
+            .Any(r => r == "Admin" || r == "SuperAdmin");
+
+        @if (isAdmin)
+        {
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm app-admin-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="app-admin-icon rounded p-2 me-3"><i class="bi bi-shield-lock fs-4"></i></span>
+                            <h5 class="card-title mb-0">Admin Console</h5>
+                        </div>
+                        <p class="card-text text-muted small">Manage application settings and view system-level information. Requires Admin or SuperAdmin role.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a asp-page="/Admin/Admin" class="btn btn-sm btn-outline-admin">
+                            <i class="bi bi-arrow-right-circle me-1"></i> Open Admin
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm app-admin-card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="app-admin-icon rounded p-2 me-3"><i class="bi bi-diagram-3 fs-4"></i></span>
+                            <h5 class="card-title mb-0">Active Directory</h5>
+                        </div>
+                        <p class="card-text text-muted small">Search and inspect Active Directory users and their security group memberships. Windows AD integration via <code>System.DirectoryServices</code>.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0">
+                        <a asp-page="/Admin/ActiveDirectory" class="btn btn-sm btn-outline-admin">
+                            <i class="bi bi-arrow-right-circle me-1"></i> Search AD
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<!-- Solution Architecture -->
+<h4 class="index-section-title mb-3"><i class="bi bi-diagram-2 me-2"></i>Solution Architecture</h4>
+<div class="row g-4 mb-5">
+    <div class="col-md-3">
+        <div class="card h-100 bg-light border-0">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase text-muted small fw-bold mb-2"><i class="bi bi-globe2 me-1"></i> Web</h6>
+                <p class="card-text small mb-2">ASP.NET Core Razor Pages UI. Feature-folder page organization, Bootstrap 5, cookie authentication.</p>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li><i class="bi bi-file-earmark-code me-1"></i> Pages/Home</li>
+                    <li><i class="bi bi-file-earmark-code me-1"></i> Pages/Auth</li>
+                    <li><i class="bi bi-file-earmark-code me-1"></i> Pages/Employees</li>
+                    <li><i class="bi bi-file-earmark-code me-1"></i> Pages/Admin</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 bg-light border-0">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase text-muted small fw-bold mb-2"><i class="bi bi-gear me-1"></i> Services</h6>
+                <p class="card-text small mb-2">Business logic layer. DI-registered via extension method. Abstractions, models, and infrastructure seeding.</p>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li><i class="bi bi-folder me-1"></i> Abstractions</li>
+                    <li><i class="bi bi-folder me-1"></i> Services</li>
+                    <li><i class="bi bi-folder me-1"></i> Models</li>
+                    <li><i class="bi bi-folder me-1"></i> Infrastructure</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 bg-light border-0">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase text-muted small fw-bold mb-2"><i class="bi bi-database me-1"></i> Data</h6>
+                <p class="card-text small mb-2">EF Core data access layer targeting SQL Server. Repository pattern with abstractions and a shared <code>DbContext</code>.</p>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li><i class="bi bi-folder me-1"></i> Abstractions</li>
+                    <li><i class="bi bi-folder me-1"></i> Context</li>
+                    <li><i class="bi bi-folder me-1"></i> Entities</li>
+                    <li><i class="bi bi-folder me-1"></i> Repositories</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card h-100 bg-light border-0">
+            <div class="card-body">
+                <h6 class="card-title text-uppercase text-muted small fw-bold mb-2"><i class="bi bi-check2-square me-1"></i> Tests</h6>
+                <p class="card-text small mb-2">xUnit test suite covering unit, integration, and functional scenarios. 48 tests, all passing.</p>
+                <ul class="list-unstyled small text-muted mb-0">
+                    <li><i class="bi bi-folder me-1"></i> Unit</li>
+                    <li><i class="bi bi-folder me-1"></i> Integration</li>
+                    <li><i class="bi bi-folder me-1"></i> Functional</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Technology Stack -->
+<h4 class="index-section-title mb-3"><i class="bi bi-stack me-2"></i>Technology Stack</h4>
+<div class="table-responsive mb-5">
+    <table class="table table-sm table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Concern</th>
+                <th>Technology</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody class="small">
+            <tr>
+                <td>Framework</td>
+                <td><span class="badge bg-primary">ASP.NET Core 10</span></td>
+                <td>Razor Pages, minimal hosting model</td>
+            </tr>
+            <tr>
+                <td>ORM / Database</td>
+                <td><span class="badge bg-secondary">EF Core &middot; SQL Server</span></td>
+                <td>Code-first, <code>Server=localhost,1433</code></td>
+            </tr>
+            <tr>
+                <td>Authentication</td>
+                <td><span class="badge bg-secondary">Cookie Auth</span></td>
+                <td><code>ClaimTypes.Role</code> &middot; AdminOnly policy</td>
+            </tr>
+            <tr>
+                <td>Directory Services</td>
+                <td><span class="badge bg-secondary">System.DirectoryServices</span></td>
+                <td>Windows AD integration, runtime-guarded</td>
+            </tr>
+            <tr>
+                <td>UI</td>
+                <td><span class="badge bg-secondary">Bootstrap 5 &middot; Bootstrap Icons</span></td>
+                <td>Responsive layout, shared <code>_Layout.cshtml</code></td>
+            </tr>
+            <tr>
+                <td>Testing</td>
+                <td><span class="badge bg-success">xUnit &middot; 48 tests</span></td>
+                <td>Unit, integration, and functional coverage</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</div>

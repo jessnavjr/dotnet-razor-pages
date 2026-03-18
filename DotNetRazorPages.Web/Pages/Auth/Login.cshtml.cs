@@ -81,7 +81,7 @@ public class LoginModel : PageModel
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Home/Index");
         }
         catch (Exception)
         {
@@ -96,12 +96,12 @@ public class LoginModel : PageModel
         try
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToPage("/Login", new { loggedout = true });
+            return RedirectToPage("/Auth/Login", new { loggedout = true });
         }
         catch (Exception)
         {
             // Even if there's an error, clear the session and redirect
-            return RedirectToPage("/Index");
+            return RedirectToPage("/Home/Index");
         }
     }
 }

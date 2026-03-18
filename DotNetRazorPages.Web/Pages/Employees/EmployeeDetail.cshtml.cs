@@ -51,7 +51,7 @@ public class EmployeeDetailModel(IEmployeeService employeeService) : PageModel
 
         var created = await employeeService.CreateEmployeeAsync(MapToDto(Input), cancellationToken);
         SetStatusMessage("Employee created successfully.");
-        return RedirectToPage("/EmployeeDetail", new { id = created.Id });
+        return RedirectToPage("/Employees/EmployeeDetail", new { id = created.Id });
     }
 
     public async Task<IActionResult> OnPostUpdateAsync(CancellationToken cancellationToken)
@@ -73,7 +73,7 @@ public class EmployeeDetailModel(IEmployeeService employeeService) : PageModel
         }
 
         SetStatusMessage("Employee updated successfully.");
-        return RedirectToPage("/EmployeeDetail", new { id = updated.Id });
+        return RedirectToPage("/Employees/EmployeeDetail", new { id = updated.Id });
     }
 
     public async Task<IActionResult> OnPostDeleteAsync(CancellationToken cancellationToken)
@@ -90,7 +90,7 @@ public class EmployeeDetailModel(IEmployeeService employeeService) : PageModel
         }
 
         SetStatusMessage("Employee deleted successfully.");
-        return RedirectToPage("/Employees");
+        return RedirectToPage("/Employees/Employees");
     }
 
     private static EmployeeDto MapToDto(InputModel input) => new()

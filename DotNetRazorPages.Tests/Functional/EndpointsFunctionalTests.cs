@@ -184,7 +184,7 @@ public class EndpointsFunctionalTests
     }
 
     [Fact]
-    public async Task ProductionEnvironment_PrivacyPage_ReturnsSuccess()
+    public async Task ProductionEnvironment_PrivacyPage_ReturnsNotFound()
     {
         await using var factory = new TestWebApplicationFactory("Production");
         using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -194,9 +194,7 @@ public class EndpointsFunctionalTests
 
         var response = await client.GetAsync("/Privacy");
 
-        response.EnsureSuccessStatusCode();
-        var content = await response.Content.ReadAsStringAsync();
-        Assert.Contains("Privacy", content);
+        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
     }
 
     [Fact]

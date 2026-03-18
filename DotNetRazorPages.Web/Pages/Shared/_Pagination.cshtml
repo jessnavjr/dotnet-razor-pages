@@ -1,21 +1,49 @@
 @model DotNetRazorPages.Web.Models.PaginationModel
 
-<form method="get" action="@Model.PagePath" class="row g-2 align-items-center mb-3">
-    <input type="hidden" name="pageNumber" value="1" />
-    @foreach (var parameter in Model.AdditionalQueryParameters)
+@{
+    var actionButtonText = ViewData["ActionButtonText"] as string;
+    var actionButtonPage = ViewData["ActionButtonPage"] as string;
+}
+
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <nav aria-label="Pagination">
+        <ul class="pagination mb-0">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" href="@Model.BuildPageUrl(Model.PageNumber - 1)">
+                    <i class="bi bi-chevron-left me-1" aria-hidden="true"></i> Previous
+                </a>
+            </li>
+            <li class="page-item">
+                <span class="page-link pagination-status">Page @Model.PageNumber of @Model.TotalPages</span>
+            </li>
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" href="@Model.BuildPageUrl(Model.PageNumber + 1)">
+                    Next <i class="bi bi-chevron-right ms-1" aria-hidden="true"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    @if (!string.IsNullOrWhiteSpace(actionButtonText) && !string.IsNullOrWhiteSpace(actionButtonPage))
     {
-        if (!string.Equals(parameter.Key, "pageNumber", StringComparison.OrdinalIgnoreCase) &&
-            !string.Equals(parameter.Key, "pageSize", StringComparison.OrdinalIgnoreCase))
-        {
-            <input type="hidden" name="@parameter.Key" value="@parameter.Value" />
-        }
+        <a asp-page="@actionButtonPage" class="btn btn-primary ms-lg-2">
+            @actionButtonText
+        </a>
     }
 
-    <div class="col-auto">
-        <label for="pageSize" class="col-form-label">Rows per page</label>
-    </div>
+    <form method="get" action="@Model.PagePath" class="d-flex align-items-center gap-2 ms-auto">
+        <input type="hidden" name="pageNumber" value="1" />
+        @foreach (var parameter in Model.AdditionalQueryParameters)
+        {
+            if (!string.Equals(parameter.Key, "pageNumber", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(parameter.Key, "pageSize", StringComparison.OrdinalIgnoreCase))
+            {
+                <input type="hidden" name="@parameter.Key" value="@parameter.Value" />
+            }
+        }
 
-    <div class="col-auto">
+        <label for="pageSize" class="col-form-label mb-0 text-nowrap">Rows per page</label>
+
         <select id="pageSize" name="pageSize" class="form-select" onchange="this.form.submit()">
             @foreach (var option in Model.PageSizeOptions)
             {
@@ -29,19 +57,5 @@
                 }
             }
         </select>
-    </div>
-</form>
-
-<nav aria-label="Pagination">
-    <ul class="pagination">
-        <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
-            <a class="page-link" href="@Model.BuildPageUrl(Model.PageNumber - 1)">Previous</a>
-        </li>
-        <li class="page-item disabled">
-            <span class="page-link">Page @Model.PageNumber of @Model.TotalPages</span>
-        </li>
-        <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
-            <a class="page-link" href="@Model.BuildPageUrl(Model.PageNumber + 1)">Next</a>
-        </li>
-    </ul>
-</nav>
+    </form>
+</div>

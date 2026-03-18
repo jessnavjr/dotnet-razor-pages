@@ -1,4 +1,4 @@
-@page "{id:int?}"
+@page "/EmployeeDetail/{id:int?}"
 @model DotNetRazorPages.Web.Pages.EmployeeDetailModel
 @{
     ViewData["Title"] = Model.IsCreateMode ? "Create Employee" : "Employee Details";
@@ -71,7 +71,7 @@
                 Delete
             </button>
         }
-        <a asp-page="/Employees" class="btn btn-outline-secondary">Back to Employees</a>
+        <a asp-page="/Employees/Employees" class="btn btn-outline-secondary">Back to Employees</a>
     </div>
 </form>
 

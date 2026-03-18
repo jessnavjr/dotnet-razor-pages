@@ -109,7 +109,7 @@ public class PageModelTests
         var result = await model.OnPostCreateAsync(CancellationToken.None);
 
         var redirect = Assert.IsType<RedirectToPageResult>(result);
-        Assert.Equal("/EmployeeDetail", redirect.PageName);
+        Assert.Equal("/Employees/EmployeeDetail", redirect.PageName);
     }
 
     [Fact]
@@ -132,15 +132,7 @@ public class PageModelTests
         var result = await model.OnPostDeleteAsync(CancellationToken.None);
 
         var redirect = Assert.IsType<RedirectToPageResult>(result);
-        Assert.Equal("/Employees", redirect.PageName);
-    }
-
-    [Fact]
-    public void PrivacyModel_OnGet_DoesNotThrow()
-    {
-        var model = new PrivacyModel();
-
-        model.OnGet();
+        Assert.Equal("/Employees/Employees", redirect.PageName);
     }
 
     [Fact]

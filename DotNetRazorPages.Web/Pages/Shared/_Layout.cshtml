@@ -3,17 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - DotNetRazorPages.Web</title>
+    <title>@ViewData["Title"] - .NET RazorPages</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/bootstrap-icons.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/DotNetRazorPages.Web.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light app-navbar fixed-top">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">DotNetRazorPages.Web</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Home/Index"><strong>.NET</strong>RazorPages</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -21,13 +22,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Employees">Employees</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Employees/Employees">Employees</a>
                         </li>
                         @if (User.Identity?.IsAuthenticated == true)
                         {
@@ -40,8 +35,13 @@
                             @if (isAdmin)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-danger" asp-area="" asp-page="/Admin">
+                                    <a class="nav-link app-admin-link" asp-area="" asp-page="/Admin/Admin">
                                         <i class="bi bi-shield-lock"></i> Admin
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link app-admin-link" asp-area="" asp-page="/Admin/ActiveDirectory">
+                                        <i class="bi bi-diagram-3"></i> Active Directory
                                     </a>
                                 </li>
                             }
@@ -68,7 +68,7 @@
                                     }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <form method="post" asp-page="/Login" asp-page-handler="Logout" class="d-inline">
+                                        <form method="post" asp-page="/Auth/Login" asp-page-handler="Logout" class="d-inline">
                                             <button type="submit" class="dropdown-item text-danger">
                                                 <i class="bi bi-box-arrow-right"></i> Logout
                                             </button>
@@ -80,7 +80,7 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-page="/Login">Login</a>
+                                <a class="nav-link text-dark" asp-area="" asp-page="/Auth/Login">Login</a>
                             </li>
                         }
                     </ul>
@@ -88,15 +88,15 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container pb-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted mt-auto">
         <div class="container">
-            &copy; 2026 - DotNetRazorPages.Web - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2026 - DotNetRazorPages.Web
         </div>
     </footer>
 
