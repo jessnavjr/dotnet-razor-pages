@@ -1,0 +1,173 @@
+@page "{id:int?}"
+@model DotNetRazorPages.Web.Pages.EmployeeDetailModel
+@{
+    ViewData["Title"] = Model.IsCreateMode ? "Create Employee" : "Employee Details";
+}
+
+<h1 class="mb-3">@ViewData["Title"]</h1>
+
+@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+{
+    <div class="alert alert-success">@Model.StatusMessage</div>
+}
+
+<form method="post" asp-page-handler="@(Model.IsCreateMode ? "Create" : "Update")" class="mb-3">
+    <input type="hidden" asp-for="Input.Id" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+
+    <div class="mb-3">
+        <label asp-for="Input.FirstName" class="form-label"></label>
+        <input asp-for="Input.FirstName" class="form-control" />
+        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.LastName" class="form-label"></label>
+        <input asp-for="Input.LastName" class="form-control" />
+        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.Email" class="form-label"></label>
+        <input asp-for="Input.Email"
+               class="form-control"
+               type="email"
+               autocomplete="email"
+               pattern="^[^\s\x40]+\x40[^\s\x40]+\.[^\s\x40]+$"
+               title="Enter a valid email address (example: name at company dot com)."
+               aria-describedby="emailFormatFeedback" />
+        <div id="emailFormatFeedback" class="invalid-feedback">
+            Please enter a valid email address format.
+        </div>
+        <span asp-validation-for="Input.Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.JobTitle" class="form-label"></label>
+        <input asp-for="Input.JobTitle" class="form-control" />
+        <span asp-validation-for="Input.JobTitle" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Input.HireDate" class="form-label"></label>
+        <input asp-for="Input.HireDate" class="form-control" type="date" />
+        <span asp-validation-for="Input.HireDate" class="text-danger"></span>
+    </div>
+
+    <div class="form-check mb-3">
+        <input asp-for="Input.IsActive" class="form-check-input" />
+        <label asp-for="Input.IsActive" class="form-check-label"></label>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button id="saveEmployeeButton" type="submit" class="btn btn-primary">@(Model.IsCreateMode ? "Create" : "Save")</button>
+        @if (!Model.IsCreateMode)
+        {
+            <button type="submit"
+                    asp-page-handler="Delete"
+                    class="btn btn-danger"
+                    onclick="return confirm('Delete this employee record?');">
+                Delete
+            </button>
+        }
+        <a asp-page="/Employees" class="btn btn-outline-secondary">Back to Employees</a>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const emailField = document.getElementById('Input_Email');
+            const emailFeedback = document.getElementById('emailFormatFeedback');
+            if (!emailField) {
+                return;
+            }
+
+            const emailPattern = /^[^\s\x40]+\x40[^\s\x40]+\.[^\s\x40]+$/;
+            const emailErrorMessage = 'Please enter a valid email address (example: name at company dot com).';
+
+            const validateEmailFormat = () => {
+                const value = (emailField.value || '').trim();
+
+                // Let required validation handle empty values.
+                if (!value) {
+                    emailField.setCustomValidity('');
+                    emailField.classList.remove('is-invalid');
+                    return;
+                }
+
+                const isValid = emailPattern.test(value);
+                emailField.setCustomValidity(isValid ? '' : emailErrorMessage);
+                emailField.classList.toggle('is-invalid', !isValid);
+
+                if (!isValid && emailFeedback) {
+                    emailFeedback.textContent = emailErrorMessage;
+                }
+            };
+
+            emailField.addEventListener('input', validateEmailFormat);
+            emailField.addEventListener('change', validateEmailFormat);
+            emailField.addEventListener('blur', validateEmailFormat);
+            validateEmailFormat();
+        })();
+
+    </script>
+    <script>
+        (() => {
+            const isCreateMode = @Model.IsCreateMode.ToString().ToLowerInvariant();
+            if (isCreateMode) {
+                return;
+            }
+
+            const form = document.querySelector('form[asp-page-handler], form[method="post"]');
+            const saveButton = document.getElementById('saveEmployeeButton');
+            if (!form || !saveButton) {
+                return;
+            }
+
+            const trackedFieldSelectors = [
+                '#Input_FirstName',
+                '#Input_LastName',
+                '#Input_Email',
+                '#Input_JobTitle',
+                '#Input_HireDate',
+                '#Input_IsActive'
+            ];
+
+            const trackedFields = trackedFieldSelectors
+                .map(selector => document.querySelector(selector))
+                .filter(field => field !== null);
+
+            const getFieldValue = (field) => {
+                if (field.type === 'checkbox') {
+                    return field.checked ? 'true' : 'false';
+                }
+
+                return field.value ?? '';
+            };
+
+            const originalValues = new Map();
+            trackedFields.forEach(field => {
+                originalValues.set(field.id, getFieldValue(field));
+            });
+
+            const updateSaveButtonState = () => {
+                const hasChanges = trackedFields.some(field => {
+                    const original = originalValues.get(field.id) ?? '';
+                    return getFieldValue(field) !== original;
+                });
+
+                saveButton.disabled = !hasChanges;
+            };
+
+            trackedFields.forEach(field => {
+                field.addEventListener('input', updateSaveButtonState);
+                field.addEventListener('change', updateSaveButtonState);
+            });
+
+            updateSaveButtonState();
+        })();
+    </script>
+}

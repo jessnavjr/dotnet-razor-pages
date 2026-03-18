@@ -50,7 +50,7 @@ Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=Str0ngPass
 ### Run the solution
 
 ```bash
-dotnet build DotNetRazorPages.slnx
+dotnet build DotNetRazorPages.sln
 dotnet run --project DotNetRazorPages.Web --no-build
 ```
 

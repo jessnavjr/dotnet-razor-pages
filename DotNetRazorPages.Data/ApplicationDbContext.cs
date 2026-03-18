@@ -16,6 +16,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             entity.ToTable("Employees");
 
             entity.HasKey(e => e.Id);
+            entity
+                .HasIndex(e => new { e.FirstName, e.LastName })
+                .IsUnique()
+                .HasDatabaseName("UX_Employees_FirstName_LastName");
             entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
             entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
             entity.Property(e => e.Email).HasMaxLength(256).IsRequired();
