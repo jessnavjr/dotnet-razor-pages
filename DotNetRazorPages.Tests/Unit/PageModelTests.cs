@@ -58,7 +58,7 @@ public class PageModelTests
     [Fact]
     public async Task EmployeeDetailModel_OnGetAsync_LoadsEmployee_WhenFound()
     {
-        var model = new EmployeeDetailModel(new FakeEmployeeService());
+        var model = new EmployeeDetailModel(new FakeEmployeeService(), new FakeEmployeePdfService());
 
         var result = await model.OnGetAsync(1, CancellationToken.None);
 
@@ -70,7 +70,7 @@ public class PageModelTests
     [Fact]
     public async Task EmployeeDetailModel_OnGetAsync_ReturnsNotFound_WhenMissing()
     {
-        var model = new EmployeeDetailModel(new FakeEmployeeService());
+        var model = new EmployeeDetailModel(new FakeEmployeeService(), new FakeEmployeePdfService());
 
         var result = await model.OnGetAsync(999, CancellationToken.None);
 
@@ -81,7 +81,7 @@ public class PageModelTests
     [Fact]
     public async Task EmployeeDetailModel_OnGetAsync_WithoutId_InitializesCreateMode()
     {
-        var model = new EmployeeDetailModel(new FakeEmployeeService());
+        var model = new EmployeeDetailModel(new FakeEmployeeService(), new FakeEmployeePdfService());
 
         var result = await model.OnGetAsync(null, CancellationToken.None);
 
@@ -93,7 +93,7 @@ public class PageModelTests
     [Fact]
     public async Task EmployeeDetailModel_OnPostCreateAsync_CreatesAndRedirects()
     {
-        var model = new EmployeeDetailModel(new FakeEmployeeService())
+        var model = new EmployeeDetailModel(new FakeEmployeeService(), new FakeEmployeePdfService())
         {
             Input = new EmployeeDetailModel.InputModel
             {
@@ -115,7 +115,7 @@ public class PageModelTests
     [Fact]
     public async Task EmployeeDetailModel_OnPostDeleteAsync_DeletesAndRedirects()
     {
-        var model = new EmployeeDetailModel(new FakeEmployeeService())
+        var model = new EmployeeDetailModel(new FakeEmployeeService(), new FakeEmployeePdfService())
         {
             Input = new EmployeeDetailModel.InputModel
             {
@@ -184,6 +184,11 @@ public class PageModelTests
     private sealed class FakeGreetingService : IGreetingService
     {
         public string GetGreeting() => "hello-test";
+    }
+
+    private sealed class FakeEmployeePdfService : IEmployeePdfService
+    {
+        public byte[] GenerateEmployeeReport(EmployeeDto employee) => [];
     }
 
     private sealed class FakeEmployeeService : IEmployeeService

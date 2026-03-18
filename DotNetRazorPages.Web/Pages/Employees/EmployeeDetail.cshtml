@@ -4,76 +4,85 @@
     ViewData["Title"] = Model.IsCreateMode ? "Create Employee" : "Employee Details";
 }
 
-<h1 class="mb-3">@ViewData["Title"]</h1>
+<article class="employee-detail-page">
+    <header class="mb-3">
+        <h1 class="mb-0">@ViewData["Title"]</h1>
+    </header>
 
-@if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
-{
-    <div class="alert alert-success">@Model.StatusMessage</div>
-}
+    @if (!string.IsNullOrWhiteSpace(Model.StatusMessage))
+    {
+        <section class="alert alert-success" role="status">@Model.StatusMessage</section>
+    }
 
-<form method="post" asp-page-handler="@(Model.IsCreateMode ? "Create" : "Update")" class="mb-3">
-    <input type="hidden" asp-for="Input.Id" />
+    <form method="post" asp-page-handler="@(Model.IsCreateMode ? "Create" : "Update")" class="mb-3">
+        <input type="hidden" asp-for="Input.Id" />
 
-    <div asp-validation-summary="ModelOnly" class="text-danger mb-2"></div>
+        <section asp-validation-summary="ModelOnly" class="text-danger mb-2"></section>
 
-    <div class="mb-3">
-        <label asp-for="Input.FirstName" class="form-label"></label>
-        <input asp-for="Input.FirstName" class="form-control" />
-        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
-    </div>
+        <section class="mb-3">
+            <label asp-for="Input.FirstName" class="form-label"></label>
+            <input asp-for="Input.FirstName" class="form-control" />
+            <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+        </section>
 
-    <div class="mb-3">
-        <label asp-for="Input.LastName" class="form-label"></label>
-        <input asp-for="Input.LastName" class="form-control" />
-        <span asp-validation-for="Input.LastName" class="text-danger"></span>
-    </div>
+        <section class="mb-3">
+            <label asp-for="Input.LastName" class="form-label"></label>
+            <input asp-for="Input.LastName" class="form-control" />
+            <span asp-validation-for="Input.LastName" class="text-danger"></span>
+        </section>
 
-    <div class="mb-3">
-        <label asp-for="Input.Email" class="form-label"></label>
-        <input asp-for="Input.Email"
-               class="form-control"
-               type="email"
-               autocomplete="email"
-               pattern="^[^\s\x40]+\x40[^\s\x40]+\.[^\s\x40]+$"
-               title="Enter a valid email address (example: name at company dot com)."
-               aria-describedby="emailFormatFeedback" />
-        <div id="emailFormatFeedback" class="invalid-feedback">
-            Please enter a valid email address format.
-        </div>
-        <span asp-validation-for="Input.Email" class="text-danger"></span>
-    </div>
+        <section class="mb-3">
+            <label asp-for="Input.Email" class="form-label"></label>
+            <input asp-for="Input.Email"
+                   class="form-control"
+                   type="email"
+                   autocomplete="email"
+                   pattern="^[^\s\x40]+\x40[^\s\x40]+\.[^\s\x40]+$"
+                   title="Enter a valid email address (example: name at company dot com)."
+                   aria-describedby="emailFormatFeedback" />
+            <p id="emailFormatFeedback" class="invalid-feedback mb-0">
+                Please enter a valid email address format.
+            </p>
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
+        </section>
 
-    <div class="mb-3">
-        <label asp-for="Input.JobTitle" class="form-label"></label>
-        <input asp-for="Input.JobTitle" class="form-control" />
-        <span asp-validation-for="Input.JobTitle" class="text-danger"></span>
-    </div>
+        <section class="mb-3">
+            <label asp-for="Input.JobTitle" class="form-label"></label>
+            <input asp-for="Input.JobTitle" class="form-control" />
+            <span asp-validation-for="Input.JobTitle" class="text-danger"></span>
+        </section>
 
-    <div class="mb-3">
-        <label asp-for="Input.HireDate" class="form-label"></label>
-        <input asp-for="Input.HireDate" class="form-control" type="date" />
-        <span asp-validation-for="Input.HireDate" class="text-danger"></span>
-    </div>
+        <section class="mb-3">
+            <label asp-for="Input.HireDate" class="form-label"></label>
+            <input asp-for="Input.HireDate" class="form-control" type="date" />
+            <span asp-validation-for="Input.HireDate" class="text-danger"></span>
+        </section>
 
-    <div class="form-check mb-3">
-        <input asp-for="Input.IsActive" class="form-check-input" />
-        <label asp-for="Input.IsActive" class="form-check-label"></label>
-    </div>
+        <section class="form-check mb-3">
+            <input asp-for="Input.IsActive" class="form-check-input" />
+            <label asp-for="Input.IsActive" class="form-check-label"></label>
+        </section>
 
-    <div class="d-flex gap-2">
-        <button id="saveEmployeeButton" type="submit" class="btn btn-primary">@(Model.IsCreateMode ? "Create" : "Save")</button>
-        @if (!Model.IsCreateMode)
-        {
-            <button type="submit"
-                    asp-page-handler="Delete"
-                    class="btn btn-danger"
-                    onclick="return confirm('Delete this employee record?');">
-                Delete
-            </button>
-        }
-        <a asp-page="/Employees/Employees" class="btn btn-outline-secondary">Back to Employees</a>
-    </div>
-</form>
+        <footer class="d-flex gap-2">
+            <button id="saveEmployeeButton" type="submit" class="btn btn-primary">@(Model.IsCreateMode ? "Create" : "Save")</button>
+            @if (!Model.IsCreateMode)
+            {
+                <button type="submit"
+                        asp-page-handler="Delete"
+                        class="btn btn-danger"
+                        onclick="return confirm('Delete this employee record?');">
+                    Delete
+                </button>
+                <a asp-page-handler="ExportPdf"
+                   asp-route-id="@Model.Input.Id"
+                   class="btn btn-outline-secondary ms-auto">
+                    <i class="bi bi-file-earmark-arrow-down"></i> Export to PDF
+                </a>
+            }
+            <a asp-page="/Employees/Employees" class="btn btn-outline-secondary @(Model.IsCreateMode ? "ms-auto" : "")">Back to Employees</a>
+        </footer>
+    </form>
+</article>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

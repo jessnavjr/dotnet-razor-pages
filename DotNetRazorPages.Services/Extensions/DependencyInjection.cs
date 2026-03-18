@@ -1,6 +1,7 @@
 using DotNetRazorPages.Data;
 using DotNetRazorPages.Services.Abstractions;
 using DotNetRazorPages.Services.Models;
+using DotNetRazorPages.Services.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 
@@ -22,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IEmployeeService, EmployeeService>();
         services.AddScoped<IActiveDirectoryService, ActiveDirectoryService>();
         services.AddScoped<IApplicationDbInitializer, ApplicationDbInitializer>();
+        services.AddSingleton<IEmployeePdfService, EmployeePdfService>();
 
         return services;
     }

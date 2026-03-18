@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace DotNetRazorPages.Web.Pages;
 
-public class EmployeeDetailModel(IEmployeeService employeeService) : PageModel
+public class EmployeeDetailModel(
+    IEmployeeService employeeService,
+    IEmployeePdfService employeePdfService) : PageModel
 {
     [BindProperty]
     public InputModel Input { get; set; } = new();
@@ -39,6 +41,24 @@ public class EmployeeDetailModel(IEmployeeService employeeService) : PageModel
 
         Input = MapToInput(employee);
         return Page();
+    }
+
+    public async Task<IActionResult> OnGetExportPdfAsync(int id, CancellationToken cancellationToken)
+    {
+        if (id <= 0)
+        {
+            return NotFound();
+        }
+
+        var employee = await employeeService.GetEmployeeByIdAsync(id, cancellationToken);
+        if (employee is null)
+        {
+            return NotFound();
+        }
+
+        var pdfBytes = employeePdfService.GenerateEmployeeReport(employee);
+        var fileName = $"employee-{employee.Id}-{employee.LastName.ToLowerInvariant()}.pdf";
+        return File(pdfBytes, "application/pdf", fileName);
     }
 
     public async Task<IActionResult> OnPostCreateAsync(CancellationToken cancellationToken)

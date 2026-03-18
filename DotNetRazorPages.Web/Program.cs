@@ -2,6 +2,9 @@ using DotNetRazorPages.Services;
 using DotNetRazorPages.Services.Abstractions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
+using QuestPDF.Infrastructure;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
