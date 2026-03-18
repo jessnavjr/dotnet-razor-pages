@@ -1,0 +1,65 @@
+@page
+@model AccessDeniedModel
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-exclamation-triangle"></i> Access Denied
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <p class="lead">You do not have permission to access this resource.</p>
+                    <p>
+                        This page requires specific roles or permissions that your account does not currently have.
+                        If you believe you should have access, please contact an administrator.
+                    </p>
+
+                    <div class="mt-4">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <p>
+                                <strong>Current User:</strong> @User.Identity.Name<br />
+                                <strong>Your Roles:</strong>
+                                @{
+                                    var roles = User.Claims
+                                        .Where(c => c.Type == System.Security.Claims.ClaimTypes.Role || c.Type == "role")
+                                        .Select(c => c.Value)
+                                        .Distinct(StringComparer.OrdinalIgnoreCase);
+                                    if (roles.Any())
+                                    {
+                                        @foreach (var role in roles)
+                                        {
+                                            <span class="badge bg-primary">@role</span>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">No roles assigned</span>
+                                    }
+                                }
+                            </p>
+                        }
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="/" class="btn btn-primary">
+                            <i class="bi bi-house"></i> Go to Home
+                        </a>
+                        @if (!User.Identity?.IsAuthenticated == true)
+                        {
+                            <a href="/Login" class="btn btn-success">
+                                <i class="bi bi-box-arrow-in-right"></i> Login
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

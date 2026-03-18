@@ -1,0 +1,125 @@
+@page
+@model AdminModel
+@{
+    ViewData["Title"] = "Admin Panel";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="mb-4">
+                <i class="bi bi-shield-lock"></i> Admin Panel
+            </h1>
+
+            @if (Model.IsAuthorizedAdmin)
+            {
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Welcome, Administrator!</h4>
+                    <p>You have successfully accessed the admin panel.</p>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0">User Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row">
+                                    <dt class="col-sm-3">Username:</dt>
+                                    <dd class="col-sm-9"><code>@Model.CurrentUser</code></dd>
+
+                                    <dt class="col-sm-3">Roles:</dt>
+                                    <dd class="col-sm-9">
+                                        @if (Model.UserRoles?.Any() == true)
+                                        {
+                                            @foreach (var role in Model.UserRoles)
+                                            {
+                                                <span class="badge bg-primary">@role</span>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <em>No roles assigned</em>
+                                        }
+                                    </dd>
+
+                                    <dt class="col-sm-3">Auth Status:</dt>
+                                    <dd class="col-sm-9">
+                                        <span class="badge bg-success">Authenticated</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-dark text-white">
+                                <h5 class="mb-0">Configuration</h5>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Allowed Admin Roles:</dt>
+                                    <dd class="col-sm-8">
+                                        @if (Model.AllowedRoles?.Any() == true)
+                                        {
+                                            @foreach (var role in Model.AllowedRoles)
+                                            {
+                                                <span class="badge bg-info">@role</span>
+                                            }
+                                        }
+                                    </dd>
+
+                                    <dt class="col-sm-4">Authorization Policy:</dt>
+                                    <dd class="col-sm-8"><code>AdminOnly</code></dd>
+
+                                    <dt class="col-sm-4">Access Level:</dt>
+                                    <dd class="col-sm-8"><span class="badge bg-warning text-dark">Full Admin</span></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0">Admin Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <a href="/Employees" class="btn btn-primary w-100">
+                                    <i class="bi bi-people"></i> Manage Employees
+                                </a>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-warning w-100" onclick="alert('Feature not yet implemented')">
+                                    <i class="bi bi-gear"></i> System Settings
+                                </button>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <button class="btn btn-info w-100" onclick="alert('Feature not yet implemented')">
+                                    <i class="bi bi-graph-up"></i> View Reports
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a href="/" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Home
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Access Denied</h4>
+                    <p>You do not have the required permissions to access this page.</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

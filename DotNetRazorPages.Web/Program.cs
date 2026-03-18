@@ -1,5 +1,7 @@
 using DotNetRazorPages.Services;
 using DotNetRazorPages.Services.Abstractions;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -7,7 +9,30 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 // Add services to the container.
 builder.Services.AddRazorPages();
-builder.Services.AddApplicationServices(connectionString);
+builder.Services.AddApplicationServices(connectionString, builder.Configuration);
+
+// Add authentication and authorization
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("AdminOnly", policy =>
+    {
+        var adminRoles = builder.Configuration.GetSection("Authorization:AdminRoles").Get<string[]>() ?? ["Admin"];
+        policy.RequireAssertion(context =>
+        {
+            var userRoles = context.User.Claims
+                .Where(c => c.Type == ClaimTypes.Role || c.Type == "role")
+                .Select(c => c.Value);
+
+            return userRoles.Any(role => adminRoles.Contains(role, StringComparer.OrdinalIgnoreCase));
+        });
+    });
 
 var app = builder.Build();
 
@@ -29,6 +54,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

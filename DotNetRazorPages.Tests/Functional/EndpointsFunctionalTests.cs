@@ -226,4 +226,49 @@ public class EndpointsFunctionalTests
         Assert.Contains("An error occurred while processing your request.", content);
         Assert.Contains("Request ID:", content);
     }
+
+    [Fact]
+    public async Task AdminPage_UnauthenticatedAccess_RedirectsToLogin()
+    {
+        await using var factory = new TestWebApplicationFactory();
+        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
+        {
+            AllowAutoRedirect = false
+        });
+
+        var response = await client.GetAsync("/Admin");
+
+        Assert.Equal(System.Net.HttpStatusCode.Redirect, response.StatusCode);
+        Assert.True(response.Headers.Location?.ToString().Contains("/Login") ?? false);
+    }
+
+    [Fact]
+    public async Task LoginPage_DisplaysCorrectly()
+    {
+        await using var factory = new TestWebApplicationFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/Login");
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+
+        Assert.Contains("Login", content);
+        Assert.Contains("Username", content);
+        Assert.Contains("Select Role", content);
+        Assert.Contains("Admin", content);
+    }
+
+    [Fact]
+    public async Task AccessDeniedPage_ReturnsAccessDeniedMessage()
+    {
+        await using var factory = new TestWebApplicationFactory();
+        using var client = factory.CreateClient();
+
+        var response = await client.GetAsync("/AccessDenied");
+
+        response.EnsureSuccessStatusCode();
+        var content = await response.Content.ReadAsStringAsync();
+        Assert.Contains("Access Denied", content);
+        Assert.Contains("You do not have permission", content);
+    }
 }
