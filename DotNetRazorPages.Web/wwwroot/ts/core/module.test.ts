@@ -1,10 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
 import { runModules } from "./module";
 
 describe("runModules", () => {
     it("runs only modules whose shouldRun returns true", () => {
-        const firstRun = vi.fn();
-        const secondRun = vi.fn();
+        const firstRun = jest.fn();
+        const secondRun = jest.fn();
 
         const firstModule = {
             shouldRun: () => true,

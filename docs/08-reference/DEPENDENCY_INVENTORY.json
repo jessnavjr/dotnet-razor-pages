@@ -93,13 +93,24 @@
       "status": "track"
     },
     {
-      "name": "Vitest",
+      "name": "Jest",
       "category": "frontend-testing",
-      "currentVersion": "3.1.1",
+      "currentVersion": "29.7.0",
       "source": "DotNetRazorPages.Web/package.json",
-      "vendor": "Vitest",
-      "lifecycleUrl": "https://github.com/vitest-dev/vitest/releases",
+      "vendor": "OpenJS Foundation",
+      "lifecycleUrl": "https://github.com/jestjs/jest/releases",
       "targetTrack": "Current stable",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "ts-jest",
+      "category": "frontend-testing",
+      "currentVersion": "29.2.6",
+      "source": "DotNetRazorPages.Web/package.json",
+      "vendor": "kulshekhar",
+      "lifecycleUrl": "https://github.com/kulshekhar/ts-jest/releases",
+      "targetTrack": "Compatible with Jest major",
       "eolDate": null,
       "status": "track"
     },

@@ -105,7 +105,8 @@ public class ActiveDirectoryService(IOptions<ActiveDirectoryOptions> options) : 
             string.IsNullOrWhiteSpace(_options.BindUsername) ||
             string.IsNullOrWhiteSpace(_options.BindPassword))
         {
-            throw new InvalidOperationException("Active Directory settings are incomplete. Configure ActiveDirectory:Domain, ActiveDirectory:BindUsername, and ActiveDirectory:BindPassword.");
+            throw new InvalidOperationException(
+                "Active Directory settings are incomplete. Configure ActiveDirectory:Domain, ActiveDirectory:BindUsername, and ActiveDirectory:BindPassword with ASP.NET Core User Secrets for local development or environment variables for deployed environments.");
         }
     }
 

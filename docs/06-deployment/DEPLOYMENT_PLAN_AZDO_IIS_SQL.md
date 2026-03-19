@@ -17,7 +17,8 @@ Hosting model:
 - Stage-based release gates:
   - Environment approvals and checks managed in Azure DevOps Environments.
 - Secrets management:
-  - SQL credentials and connection strings provided by Azure DevOps variable groups (secret variables).
+  - Prefer Azure DevOps variable groups with secret variables for IIS app pool environment variable injection.
+  - Prefer linked Azure Key Vault variable groups when central secret rotation is required.
 
 ## 3. Pipeline Files
 - Root Azure DevOps pipeline YAML: [azure-pipelines.yml](../azure-pipelines.yml)
@@ -77,8 +78,82 @@ Recommended variables:
   - `SqlDatabaseName`
   - `SqlDeployUsername` (secret)
   - `SqlDeployPassword` (secret)
-- Optional app setting injection:
+- App setting injection via IIS app pool environment variables:
   - `ConnectionStrings__DefaultConnection` (secret)
+  - `ActiveDirectory__BindUsername` (secret)
+  - `ActiveDirectory__BindPassword` (secret)
+  - `ElasticStack__Enabled`
+  - `ElasticStack__UseElasticCloud`
+  - `ElasticStack__CloudId` (secret when used)
+  - `ElasticStack__ApiKey` (secret when used)
+  - `ElasticStack__Username` (secret when used)
+  - `ElasticStack__Password` (secret when used)
+  - `AzureKeyVault__Enabled`
+  - `AzureKeyVault__VaultUri`
+
+Suggested variable group split:
+- Non-secret per-environment variable group:
+  - IIS site/app pool/binding values
+  - `AspNetCoreEnvironment`
+  - `DbDeployMode`
+  - `SqlServerInstance`
+  - `SqlDatabaseName`
+  - `ElasticStack__Enabled`
+  - `ElasticStack__UseElasticCloud`
+  - `AzureKeyVault__Enabled`
+  - `AzureKeyVault__VaultUri`
+- Secret variable group or linked Key Vault:
+  - `ConnectionStrings__DefaultConnection`
+  - `SqlDeployUsername`
+  - `SqlDeployPassword`
+  - `ActiveDirectory__BindUsername`
+  - `ActiveDirectory__BindPassword`
+  - `ElasticStack__CloudId`
+  - `ElasticStack__ApiKey`
+  - `ElasticStack__Username`
+  - `ElasticStack__Password`
+
+### 5.1 Variable Group Example
+
+Example `drp-prod` variable group:
+
+| Variable | Secret | Example / Notes |
+|---|---|---|
+| `IisSiteName` | No | `dotnet-razor-pages-prod` |
+| `IisAppPoolName` | No | `dotnet-razor-pages-prod` |
+| `WebDeployPath` | No | `C:\inetpub\dotnet-razor-pages-prod` |
+| `AspNetCoreEnvironment` | No | `Production` |
+| `SqlServerInstance` | No | `sql-prod-01` |
+| `SqlDatabaseName` | No | `DotNetRazorPagesDb` |
+| `ConnectionStrings__DefaultConnection` | Yes | Full runtime connection string |
+| `SqlDeployUsername` | Yes | SQL deployment principal |
+| `SqlDeployPassword` | Yes | SQL deployment principal password |
+| `ActiveDirectory__BindUsername` | Yes | AD bind username |
+| `ActiveDirectory__BindPassword` | Yes | AD bind password |
+| `ElasticStack__Enabled` | No | `true` or `false` |
+| `ElasticStack__UseElasticCloud` | No | `true` or `false` |
+| `ElasticStack__CloudId` | Yes | Required only for Elastic Cloud |
+| `ElasticStack__ApiKey` | Yes | Preferred for Elastic auth |
+| `AzureKeyVault__Enabled` | No | `true` to load secrets from Key Vault at app startup |
+| `AzureKeyVault__VaultUri` | No | `https://your-vault-name.vault.azure.net/` |
+
+### 5.2 Linked Azure Key Vault Pattern
+
+If you use Azure DevOps linked variable groups backed by Azure Key Vault:
+- Keep non-secret operational values in the standard variable group.
+- Link only secrets from Key Vault.
+- Use Key Vault secret names that map cleanly to configuration keys, for example:
+  - `ConnectionStrings--DefaultConnection`
+  - `ActiveDirectory--BindUsername`
+  - `ActiveDirectory--BindPassword`
+  - `ElasticStack--ApiKey`
+  - `ElasticStack--CloudId`
+  - `ElasticStack--Username`
+  - `ElasticStack--Password`
+
+Two supported patterns:
+1. Azure DevOps linked variable group injects secrets into pipeline variables, and the deploy template writes them into IIS app pool environment variables.
+2. Only `AzureKeyVault__Enabled=true` and `AzureKeyVault__VaultUri` are injected into IIS, and the app loads secrets directly from Key Vault at runtime using managed identity or another `DefaultAzureCredential` source.
 
 ## 6. Artifact Contents
 Build stage publishes one artifact named `drop` containing:
@@ -121,6 +196,10 @@ Build stage publishes one artifact named `drop` containing:
 - Optionally set app pool environment variables:
   - `ASPNETCORE_ENVIRONMENT`
   - `ConnectionStrings__DefaultConnection`
+  - `ActiveDirectory__BindUsername`
+  - `ActiveDirectory__BindPassword`
+  - `ElasticStack__*`
+  - `AzureKeyVault__*`
 - Start app pool and site
 
 ## 9. Rollback Plan
@@ -152,6 +231,7 @@ Minimum checks after each stage:
 - Restrict variable group access by environment
 - Use environment approvals for Test and Prod
 - Run deployment identity with least privilege
+- Prefer linked Azure Key Vault variable groups or runtime Key Vault loading for centrally managed secrets
 
 ## 12. Operational Recommendations
 - Add deployment logs retention and artifact retention policies

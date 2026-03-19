@@ -131,7 +131,7 @@ docs/
 
 ### Testing & Quality (2 docs)
 - Comprehensive testing strategy and plan
-- TypeScript testing in ASP.NET Core with Jest, Vitest, Playwright
+- TypeScript testing in ASP.NET Core with Jest, Playwright, and alternative runners
 
 ### Deployment & Operations (2 docs)
 - Full deployment plan for Azure DevOps + IIS + SQL Server

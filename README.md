@@ -31,10 +31,12 @@ colima start --cpu 4 --memory 8 --disk 60
 Run the local SQL container used by this solution:
 
 ```bash
+export SQL_SA_PASSWORD='replace-with-a-local-dev-password'
+
 docker rm -f dotnet-razor-sql >/dev/null 2>&1 || true
 docker run -d --name dotnet-razor-sql \
   -e ACCEPT_EULA=1 \
-  -e MSSQL_SA_PASSWORD='Str0ngPassw0rd!Dev2026' \
+  -e MSSQL_SA_PASSWORD="$SQL_SA_PASSWORD" \
   -p 1433:1433 \
   mcr.microsoft.com/azure-sql-edge:latest
 ```
@@ -47,13 +49,74 @@ docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
 
 You should see `dotnet-razor-sql` with `0.0.0.0:1433->1433/tcp`.
 
-### Connection string used by the app
+### Connection string configuration
 
-Configured in `DotNetRazorPages.Web/appsettings.json` as `ConnectionStrings:DefaultConnection`:
+Do not store the real connection string in tracked `appsettings*.json` files.
+
+For local development, store it with ASP.NET Core User Secrets:
+
+```bash
+dotnet user-secrets set --project DotNetRazorPages.Web \
+  "ConnectionStrings:DefaultConnection" \
+  "Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=$SQL_SA_PASSWORD;Encrypt=False;TrustServerCertificate=True;"
+```
+
+For deployed environments, use the `ConnectionStrings__DefaultConnection` environment variable.
+
+Example local development connection string:
 
 ```text
-Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=Str0ngPassw0rd!Dev2026;Encrypt=False;TrustServerCertificate=True;
+Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=<from-user-secrets>;Encrypt=False;TrustServerCertificate=True;
 ```
+
+### Other secrets
+
+Store Active Directory bind credentials and Elastic credentials outside tracked configuration as well.
+
+Local development with User Secrets:
+
+```bash
+dotnet user-secrets set --project DotNetRazorPages.Web "ActiveDirectory:BindUsername" "<ad-bind-username>"
+dotnet user-secrets set --project DotNetRazorPages.Web "ActiveDirectory:BindPassword" "<ad-bind-password>"
+dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:Username" "<elastic-username>"
+dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:Password" "<elastic-password>"
+dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:ApiKey" "<elastic-api-key>"
+dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:CloudId" "<elastic-cloud-id>"
+```
+
+Equivalent deployed environment variables:
+
+```text
+ActiveDirectory__BindUsername
+ActiveDirectory__BindPassword
+ElasticStack__Username
+ElasticStack__Password
+ElasticStack__ApiKey
+ElasticStack__CloudId
+```
+
+Optional Azure Key Vault integration:
+
+```bash
+dotnet user-secrets set --project DotNetRazorPages.Web "AzureKeyVault:Enabled" "true"
+dotnet user-secrets set --project DotNetRazorPages.Web "AzureKeyVault:VaultUri" "https://<your-vault-name>.vault.azure.net/"
+```
+
+When Azure Key Vault is enabled, the app uses `DefaultAzureCredential` and loads secrets before application startup validation runs.
+
+Use Azure Key Vault secret names with `--` in place of `:` for hierarchical keys, for example:
+
+```text
+ConnectionStrings--DefaultConnection
+ActiveDirectory--BindUsername
+ActiveDirectory--BindPassword
+ElasticStack--ApiKey
+ElasticStack--CloudId
+ElasticStack--Username
+ElasticStack--Password
+```
+
+See the checked-in example configuration in `DotNetRazorPages.Web/appsettings.Example.json` for the expected key structure.
 
 ### Run the solution
 

@@ -55,7 +55,7 @@ Recommended baseline:
 | AuthN/AuthZ | Cookie auth, role policy enforcement, route protection | L2 |
 | Testing in .NET | Regression prevention and safe refactoring | L2 |
 | TypeScript | Frontend behavior and support scripts | L1-L2 |
-| Frontend test tooling (Vitest) | Maintaining web-side tests | L1-L2 |
+| Frontend test tooling (Jest) | Maintaining web-side tests | L1-L2 |
 | Azure DevOps YAML | Build/deploy pipeline troubleshooting and release confidence | L2 |
 | IIS Operations | Production deploy, app pool/site diagnosis, rollback | L2 |
 | Incident Handling | Fast triage and recovery in production | L2 |
@@ -149,7 +149,7 @@ This solution is server-rendered first, so frontend depth can be lighter than in
 A maintainer should be able to:
 - Run and interpret .NET test suites
 - Add/update unit and integration tests for changed behavior
-- Maintain TypeScript tests (`vitest`) for frontend logic changes
+- Maintain TypeScript tests (`jest`) for frontend logic changes
 - Validate edge cases and security-sensitive flows before release
 
 Minimum competency target: **L2**

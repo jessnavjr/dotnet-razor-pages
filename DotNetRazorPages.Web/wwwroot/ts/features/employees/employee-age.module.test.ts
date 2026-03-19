@@ -1,11 +1,14 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createEmployeeAgeModule } from "./employee-age.module";
 
 describe("createEmployeeAgeModule", () => {
     beforeEach(() => {
         document.body.innerHTML = "";
-        vi.useFakeTimers();
-        vi.setSystemTime(new Date("2026-03-13T12:00:00Z"));
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date("2026-03-13T12:00:00Z"));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
     });
 
     it("shouldRun is true when employees table marker exists", () => {

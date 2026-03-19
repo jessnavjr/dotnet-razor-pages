@@ -13,7 +13,7 @@ namespace DotNetRazorPages.Tests.Functional;
 public class TestWebApplicationFactory : WebApplicationFactory<Program>
 {
     private const string TestConnectionString =
-        "Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=Str0ngPassw0rd!Dev2026;Encrypt=False;TrustServerCertificate=True;";
+        "Server=localhost,1433;Database=DotNetRazorPagesTests;User Id=test;Password=test;Encrypt=False;TrustServerCertificate=True;";
 
     private readonly string _environment;
     private readonly bool _returnEmployees;
@@ -32,8 +32,7 @@ public class TestWebApplicationFactory : WebApplicationFactory<Program>
         {
             var testConfig = new Dictionary<string, string?>
             {
-                ["ConnectionStrings:DefaultConnection"] =
-                    "Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=Str0ngPassw0rd!Dev2026;Encrypt=False;TrustServerCertificate=True;"
+                ["ConnectionStrings:DefaultConnection"] = TestConnectionString
             };
 
             configBuilder.AddInMemoryCollection(testConfig);

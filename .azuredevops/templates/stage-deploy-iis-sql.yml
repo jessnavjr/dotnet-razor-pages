@@ -118,11 +118,32 @@ stages:
                     }
 
                     $appCmd = "$env:windir\System32\inetsrv\appcmd.exe"
-                    & $appCmd set config -section:system.applicationHost/applicationPools "/[name='$appPool'].environmentVariables.[name='ASPNETCORE_ENVIRONMENT',value='$(AspNetCoreEnvironment)']" /commit:apphost | Out-Null
 
-                    if (-not [string]::IsNullOrWhiteSpace("$(ConnectionStrings__DefaultConnection)")) {
-                      & $appCmd set config -section:system.applicationHost/applicationPools "/[name='$appPool'].environmentVariables.[name='ConnectionStrings__DefaultConnection',value='$(ConnectionStrings__DefaultConnection)']" /commit:apphost | Out-Null
+                    function Set-AppPoolEnvironmentVariable {
+                      param(
+                        [string]$Name,
+                        [string]$Value
+                      )
+
+                      if ([string]::IsNullOrWhiteSpace($Value)) {
+                        return
+                      }
+
+                      & $appCmd set config -section:system.applicationHost/applicationPools "/[name='$appPool'].environmentVariables.[name='$Name',value='$Value']" /commit:apphost | Out-Null
                     }
+
+                    Set-AppPoolEnvironmentVariable -Name "ASPNETCORE_ENVIRONMENT" -Value "$(AspNetCoreEnvironment)"
+                    Set-AppPoolEnvironmentVariable -Name "ConnectionStrings__DefaultConnection" -Value "$(ConnectionStrings__DefaultConnection)"
+                    Set-AppPoolEnvironmentVariable -Name "ActiveDirectory__BindUsername" -Value "$(ActiveDirectory__BindUsername)"
+                    Set-AppPoolEnvironmentVariable -Name "ActiveDirectory__BindPassword" -Value "$(ActiveDirectory__BindPassword)"
+                    Set-AppPoolEnvironmentVariable -Name "ElasticStack__Enabled" -Value "$(ElasticStack__Enabled)"
+                    Set-AppPoolEnvironmentVariable -Name "ElasticStack__UseElasticCloud" -Value "$(ElasticStack__UseElasticCloud)"
+                    Set-AppPoolEnvironmentVariable -Name "ElasticStack__CloudId" -Value "$(ElasticStack__CloudId)"
+                    Set-AppPoolEnvironmentVariable -Name "ElasticStack__ApiKey" -Value "$(ElasticStack__ApiKey)"
+                    Set-AppPoolEnvironmentVariable -Name "ElasticStack__Username" -Value "$(ElasticStack__Username)"
+                    Set-AppPoolEnvironmentVariable -Name "ElasticStack__Password" -Value "$(ElasticStack__Password)"
+                    Set-AppPoolEnvironmentVariable -Name "AzureKeyVault__Enabled" -Value "$(AzureKeyVault__Enabled)"
+                    Set-AppPoolEnvironmentVariable -Name "AzureKeyVault__VaultUri" -Value "$(AzureKeyVault__VaultUri)"
 
                     Start-WebAppPool -Name $appPool
                     Start-Website -Name $siteName

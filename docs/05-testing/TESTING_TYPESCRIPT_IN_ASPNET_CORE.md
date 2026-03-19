@@ -4,6 +4,8 @@
 
 Testing TypeScript in an ASP.NET Core environment requires understanding both frontend testing best practices and how to integrate them into a .NET development workflow. This document covers testing strategies, tooling, patterns, and best practices for TypeScript in ASP.NET Core applications.
 
+For this repository, the standard frontend TypeScript test runner is Jest with `ts-jest` and `jsdom`.
+
 ---
 
 ## Context: TypeScript + ASP.NET Core Architecture
@@ -87,9 +89,9 @@ module.exports = {
 ```json
 {
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:ts": "jest --coverage",
+    "test:ts:watch": "jest --watch",
+    "test:ts:ci": "jest --coverage --runInBand"
   }
 }
 ```
@@ -1317,7 +1319,7 @@ describe('performance benchmarks', () => {
 | **Hook Tests** | @testing-library/react | Natural way to test React hooks |
 | **API Mocking** | MSW (Mock Service Worker) | Intercepts HTTP requests, works across Jest/Playwright |
 | **E2E Tests** | Playwright | Headless browser testing, great debugging tools |
-| **Performance** | Vitest Bench | Fast performance benchmarking |
+| **Performance** | Bench tooling as needed | Add dedicated benchmarking only when there is a real performance target |
 | **Coverage** | nyc or jest --coverage | Built-in or simple integration |
 
 ---
@@ -1328,8 +1330,7 @@ describe('performance benchmarks', () => {
 
 ```bash
 npm init -y
-npm install --save-dev typescript ts-jest jest @types/jest testing-library @testing-library/react
-npx jest --init
+npm install --save-dev typescript jest @types/jest ts-jest jest-environment-jsdom jsdom @testing-library/react
 ```
 
 ### Step 2: Add Test Scripts
@@ -1337,9 +1338,9 @@ npx jest --init
 ```json
 {
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:ts": "jest --coverage",
+    "test:ts:watch": "jest --watch",
+    "test:ts:ci": "jest --coverage --runInBand"
   }
 }
 ```
@@ -1363,7 +1364,7 @@ npm test
 
 Testing TypeScript in ASP.NET Core applications requires understanding both frontend testing frameworks and how they integrate with .NET development workflows. Key takeaways:
 
-1. **Use Jest or Vitest** as the primary test runner for TypeScript frontend code
+1. **Use Jest** as the primary test runner for TypeScript frontend code in this repository
 2. **Use Testing Library** for React/Vue component testing focused on user behavior
 3. **Separate frontend tests from backend tests** with independent build pipelines
 4. **Mock ASP.NET Core APIs** using jest.mock or MSW for isolation
@@ -1374,4 +1375,4 @@ Testing TypeScript in ASP.NET Core applications requires understanding both fron
 9. **Focus on user-centric testing** rather than implementation details
 10. **Set up once, run often** with watch mode for fast feedback loops
 
-The combination of Jest for unit/component testing, Testing Library for behavior-focused testing, and Playwright for E2E testing provides comprehensive coverage for TypeScript code in ASP.NET Core applications.
+In this repository, the combination of Jest for unit testing, jsdom for DOM-oriented browser behavior, and Playwright for future E2E coverage provides a clean testing baseline for TypeScript code in an ASP.NET Core application.

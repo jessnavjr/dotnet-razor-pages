@@ -1,7 +1,15 @@
-import { describe, expect, it } from "vitest";
 import { calculateAgeInYears, parseIsoDate } from "./date";
 
 describe("calculateAgeInYears", () => {
+    beforeEach(() => {
+        jest.useFakeTimers();
+        jest.setSystemTime(new Date("2026-03-13T12:00:00Z"));
+    });
+
+    afterEach(() => {
+        jest.useRealTimers();
+    });
+
     it("returns the full age when birthday has passed", () => {
         const birthDate = new Date("2000-03-10T00:00:00Z");
         const atDate = new Date("2026-03-13T12:00:00Z");
@@ -14,6 +22,12 @@ describe("calculateAgeInYears", () => {
         const atDate = new Date("2026-03-13T12:00:00Z");
 
         expect(calculateAgeInYears(birthDate, atDate)).toBe(25);
+    });
+
+    it("uses the current date when no comparison date is provided", () => {
+        const birthDate = new Date("2000-03-10T00:00:00Z");
+
+        expect(calculateAgeInYears(birthDate)).toBe(26);
     });
 });
 

@@ -16,7 +16,7 @@ In scope:
 - ASP.NET Core and EF Core major/minor alignment
 - SQL Server engine version
 - Windows Server host/runtime version (where applicable)
-- Node/TypeScript/Vitest toolchain for frontend tests
+- Node/TypeScript/Jest toolchain for frontend tests
 - Critical NuGet and test framework dependencies
 
 Out of scope:
@@ -39,7 +39,8 @@ Out of scope:
   - `coverlet.msbuild 8.0.0`
 - Frontend dev dependencies:
   - `typescript 5.8.2`
-  - `vitest 3.1.1`
+  - `jest 29.7.0`
+  - `ts-jest 29.2.6`
   - `jsdom 26.1.0`
 - Local SQL container image currently referenced in README: `mcr.microsoft.com/azure-sql-edge:latest`
 
@@ -66,7 +67,7 @@ Important:
 | EF Core | 10.0.x | Stay aligned with app runtime major | Upgrade with runtime major | Upgrade with runtime major | Provider/runtime incompatibility |
 | SQL Server Engine | Local SQL edge/dev SQL + SQL Server | Standardize supported SQL Server/Azure SQL target; remove ambiguous image tags | Upgrade to supported SQL major before EOS milestones | Revalidate HA/DR + engine support | Data platform support/compliance risk |
 | Windows Server (if hosting on Windows) | TBD by environment | Inventory host OS versions; eliminate near-EOS images | Upgrade pre-EOS per Microsoft lifecycle | Continue N-1 supported baseline | OS security and patching exposure |
-| Node + TS test toolchain | TS 5.8 / Vitest 3.x / jsdom 26 | Keep within actively supported Node LTS and package majors | Perform annual major review | Perform annual major review | Build/test instability, supply-chain risk |
+| Node + TS test toolchain | TS 5.8 / Jest 29.x / ts-jest 29.x / jsdom 26 | Keep within actively supported Node LTS and package majors | Perform annual major review | Perform annual major review | Build/test instability, supply-chain risk |
 | NuGet test/security tooling | Mixed versions | Quarterly package updates (minor/patch) | Annual major version uplift with compatibility pass | Continue quarterly cadence | CVE exposure and CI drift |
 
 ## 6. Target Upgrade Cadence
@@ -132,10 +133,10 @@ Important:
 - Enforce patch baseline and maintenance windows.
 - Schedule OS version upgrades at least 12 months before EOS.
 
-### 8.5 Frontend Tooling (Node/TypeScript/Vitest)
+### 8.5 Frontend Tooling (Node/TypeScript/Jest)
 - Standardize supported Node LTS version in CI.
 - Review major upgrades annually; apply minor/patch quarterly.
-- Keep test snapshots and DOM behavior checks stable across jsdom/vitest upgrades.
+- Keep DOM behavior checks and Jest configuration stable across jsdom/Jest upgrades.
 
 ## 9. Governance and Responsibilities
 - Engineering Lead:

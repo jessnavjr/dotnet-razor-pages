@@ -29,6 +29,7 @@ Objectives:
 - Runs startup initializer via `IApplicationDbInitializer.InitializeAsync()`
 - Exposes key routes through Razor Pages
 - Uses IIS app pool env vars for runtime settings in deployment
+- Can optionally load secrets from Azure Key Vault when `AzureKeyVault__Enabled=true`
 
 ### Primary Routes for Validation
 
@@ -138,16 +139,20 @@ Useful tools:
 - Browse `/Employees`
 - Attempt auth flow `/Login`
 
-4. Check host status:
+4. Verify configuration source:
+- If Azure Key Vault is enabled, confirm the app host can authenticate with `DefaultAzureCredential`
+- Otherwise confirm IIS app pool environment variables are present for required secrets
+
+5. Check host status:
 - IIS site state
 - App pool state
 - Disk and memory headroom
 
-5. Check database connectivity:
+6. Check database connectivity:
 - Connection/login errors in logs
 - Basic DB connectivity test
 
-6. Determine severity and escalate if needed
+7. Determine severity and escalate if needed
 
 ## 9. Standard Operational Commands
 
@@ -227,6 +232,8 @@ Actions:
 3. Verify app pool env vars:
 - `ASPNETCORE_ENVIRONMENT`
 - `ConnectionStrings__DefaultConnection` (if used)
+ - `AzureKeyVault__Enabled`
+ - `AzureKeyVault__VaultUri`
 4. Recycle app pool
 5. Re-test `/` and `/Employees`
 6. If still failing, roll back web content (see rollback section)
@@ -241,11 +248,45 @@ Symptoms:
 Actions:
 1. Run SQL connectivity check (`SELECT 1`)
 2. Validate connection string configured in IIS app pool environment vars
-3. Confirm SQL instance and DB name match expected env group values
-4. Check SQL server availability and network route from web host
-5. If deployment introduced DB change, verify migration/script completion
-6. If needed, re-run deploy stage or perform DB rollback/restore per DBA guidance
-7. Keep app in degraded mode only if safe; otherwise fail closed with error page
+3. If Azure Key Vault is enabled, validate Key Vault reachability and app host identity permissions
+4. Confirm SQL instance and DB name match expected env group values
+5. Check SQL server availability and network route from web host
+6. If deployment introduced DB change, verify migration/script completion
+7. If needed, re-run deploy stage or perform DB rollback/restore per DBA guidance
+8. Keep app in degraded mode only if safe; otherwise fail closed with error page
+
+## 10.1 Secret Source Validation
+
+When investigating startup or configuration failures, verify one of these supported secret delivery modes is in effect.
+
+### Mode A: IIS App Pool Environment Variables
+
+Expected environment variables may include:
+- `ConnectionStrings__DefaultConnection`
+- `ActiveDirectory__BindUsername`
+- `ActiveDirectory__BindPassword`
+- `ElasticStack__Enabled`
+- `ElasticStack__UseElasticCloud`
+- `ElasticStack__CloudId`
+- `ElasticStack__ApiKey`
+- `ElasticStack__Username`
+- `ElasticStack__Password`
+- `AzureKeyVault__Enabled`
+- `AzureKeyVault__VaultUri`
+
+### Mode B: Azure Key Vault Runtime Loading
+
+Expected host requirements:
+- `AzureKeyVault__Enabled=true`
+- `AzureKeyVault__VaultUri` set correctly
+- The IIS host identity or assigned managed identity has `Get` and `List` permissions for required secrets
+- Matching secret names exist in Key Vault using `--` separators instead of `:`
+
+Common startup failure patterns:
+- Missing `ConnectionStrings--DefaultConnection` in Key Vault
+- `AzureKeyVault__VaultUri` typo or wrong vault
+- Host identity missing permission to read secrets
+- Elastic enabled without `ApiKey` or username/password secret values
 
 ## Playbook C: Post-Deployment Regression
 

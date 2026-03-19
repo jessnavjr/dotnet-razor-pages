@@ -4,10 +4,16 @@
     <ProjectReference Include="..\DotNetRazorPages.Services\DotNetRazorPages.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0" />
+    <PackageReference Include="Azure.Identity" Version="1.14.2" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-razor-pages-web-9d7e3d1d-c2d3-4bfb-88c0-f6cc1941d3a5</UserSecretsId>
   </PropertyGroup>
 
 </Project>
