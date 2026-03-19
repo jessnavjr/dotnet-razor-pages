@@ -134,14 +134,6 @@ static void ValidateSecretBackedConfiguration(IConfiguration configuration)
         }
     }
 
-    var activeDirectorySection = configuration.GetSection("ActiveDirectory");
-    var bindUsername = activeDirectorySection["BindUsername"];
-    var bindPassword = activeDirectorySection["BindPassword"];
-    if (!string.IsNullOrWhiteSpace(bindUsername) && string.IsNullOrWhiteSpace(bindPassword))
-    {
-        throw new InvalidOperationException(
-            "ActiveDirectory:BindUsername is configured, but ActiveDirectory:BindPassword is missing. Store both values in User Secrets, environment variables, or Azure Key Vault.");
-    }
 }
 
 public partial class Program

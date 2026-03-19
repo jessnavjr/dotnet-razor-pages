@@ -75,4 +75,4 @@ Layering rule:
 ## Reference Documents
 - Requirements: `docs/REQUIREMENTS.md`
 - Architecture and diagrams: `docs/ARCHITECTURE.md`
-- Admin implementation notes: `ADMIN_ROLE_IMPLEMENTATION.md`
+- Admin implementation notes: `docs/08-reference/ADMIN_ROLE_IMPLEMENTATION.md`

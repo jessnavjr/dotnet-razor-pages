@@ -263,8 +263,6 @@ When investigating startup or configuration failures, verify one of these suppor
 
 Expected environment variables may include:
 - `ConnectionStrings__DefaultConnection`
-- `ActiveDirectory__BindUsername`
-- `ActiveDirectory__BindPassword`
 - `ElasticStack__Enabled`
 - `ElasticStack__UseElasticCloud`
 - `ElasticStack__CloudId`

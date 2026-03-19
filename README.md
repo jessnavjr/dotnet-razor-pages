@@ -71,13 +71,11 @@ Server=localhost,1433;Database=DotNetRazorPagesDb;User Id=sa;Password=<from-user
 
 ### Other secrets
 
-Store Active Directory bind credentials and Elastic credentials outside tracked configuration as well.
+Store Elastic credentials outside tracked configuration as well.
 
 Local development with User Secrets:
 
 ```bash
-dotnet user-secrets set --project DotNetRazorPages.Web "ActiveDirectory:BindUsername" "<ad-bind-username>"
-dotnet user-secrets set --project DotNetRazorPages.Web "ActiveDirectory:BindPassword" "<ad-bind-password>"
 dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:Username" "<elastic-username>"
 dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:Password" "<elastic-password>"
 dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:ApiKey" "<elastic-api-key>"
@@ -87,13 +85,13 @@ dotnet user-secrets set --project DotNetRazorPages.Web "ElasticStack:CloudId" "<
 Equivalent deployed environment variables:
 
 ```text
-ActiveDirectory__BindUsername
-ActiveDirectory__BindPassword
 ElasticStack__Username
 ElasticStack__Password
 ElasticStack__ApiKey
 ElasticStack__CloudId
 ```
+
+The Active Directory feature now uses the current Windows identity for internal directory queries and no longer requires a configured bind username or password.
 
 Optional Azure Key Vault integration:
 
@@ -108,8 +106,6 @@ Use Azure Key Vault secret names with `--` in place of `:` for hierarchical keys
 
 ```text
 ConnectionStrings--DefaultConnection
-ActiveDirectory--BindUsername
-ActiveDirectory--BindPassword
 ElasticStack--ApiKey
 ElasticStack--CloudId
 ElasticStack--Username

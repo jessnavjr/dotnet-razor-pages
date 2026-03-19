@@ -134,8 +134,6 @@ stages:
 
                     Set-AppPoolEnvironmentVariable -Name "ASPNETCORE_ENVIRONMENT" -Value "$(AspNetCoreEnvironment)"
                     Set-AppPoolEnvironmentVariable -Name "ConnectionStrings__DefaultConnection" -Value "$(ConnectionStrings__DefaultConnection)"
-                    Set-AppPoolEnvironmentVariable -Name "ActiveDirectory__BindUsername" -Value "$(ActiveDirectory__BindUsername)"
-                    Set-AppPoolEnvironmentVariable -Name "ActiveDirectory__BindPassword" -Value "$(ActiveDirectory__BindPassword)"
                     Set-AppPoolEnvironmentVariable -Name "ElasticStack__Enabled" -Value "$(ElasticStack__Enabled)"
                     Set-AppPoolEnvironmentVariable -Name "ElasticStack__UseElasticCloud" -Value "$(ElasticStack__UseElasticCloud)"
                     Set-AppPoolEnvironmentVariable -Name "ElasticStack__CloudId" -Value "$(ElasticStack__CloudId)"

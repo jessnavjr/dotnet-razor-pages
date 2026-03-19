@@ -27,20 +27,13 @@ public class ActiveDirectoryService(IOptions<ActiveDirectoryOptions> options) : 
     [SupportedOSPlatform("windows")]
     private ActiveDirectoryUserResult? FindUserInternal(string username)
     {
-
         var contextOptions = ContextOptions.Negotiate;
         if (_options.UseSecureSocketLayer)
         {
             contextOptions |= ContextOptions.SecureSocketLayer;
         }
 
-        using var context = new PrincipalContext(
-            ContextType.Domain,
-            _options.Domain,
-            _options.Container,
-            contextOptions,
-            _options.BindUsername,
-            _options.BindPassword);
+        using var context = CreatePrincipalContext(contextOptions);
 
         using var userPrincipal = new UserPrincipal(context)
         {
@@ -101,13 +94,25 @@ public class ActiveDirectoryService(IOptions<ActiveDirectoryOptions> options) : 
 
     private void ValidateConfiguration()
     {
-        if (string.IsNullOrWhiteSpace(_options.Domain) ||
-            string.IsNullOrWhiteSpace(_options.BindUsername) ||
-            string.IsNullOrWhiteSpace(_options.BindPassword))
+        if (string.IsNullOrWhiteSpace(_options.Domain))
         {
             throw new InvalidOperationException(
-                "Active Directory settings are incomplete. Configure ActiveDirectory:Domain, ActiveDirectory:BindUsername, and ActiveDirectory:BindPassword with ASP.NET Core User Secrets for local development or environment variables for deployed environments.");
+                "Active Directory settings are incomplete. Configure ActiveDirectory:Domain. This solution uses the current Windows identity for internal Active Directory queries.");
         }
+    }
+
+    [SupportedOSPlatform("windows")]
+    private PrincipalContext CreatePrincipalContext(ContextOptions contextOptions)
+    {
+        var container = string.IsNullOrWhiteSpace(_options.Container)
+            ? null
+            : _options.Container;
+
+        return new PrincipalContext(
+            ContextType.Domain,
+            _options.Domain,
+            container,
+            contextOptions);
     }
 
     [SupportedOSPlatform("windows")]

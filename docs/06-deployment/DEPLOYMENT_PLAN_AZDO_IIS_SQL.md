@@ -80,8 +80,6 @@ Recommended variables:
   - `SqlDeployPassword` (secret)
 - App setting injection via IIS app pool environment variables:
   - `ConnectionStrings__DefaultConnection` (secret)
-  - `ActiveDirectory__BindUsername` (secret)
-  - `ActiveDirectory__BindPassword` (secret)
   - `ElasticStack__Enabled`
   - `ElasticStack__UseElasticCloud`
   - `ElasticStack__CloudId` (secret when used)
@@ -106,8 +104,6 @@ Suggested variable group split:
   - `ConnectionStrings__DefaultConnection`
   - `SqlDeployUsername`
   - `SqlDeployPassword`
-  - `ActiveDirectory__BindUsername`
-  - `ActiveDirectory__BindPassword`
   - `ElasticStack__CloudId`
   - `ElasticStack__ApiKey`
   - `ElasticStack__Username`
@@ -128,8 +124,6 @@ Example `drp-prod` variable group:
 | `ConnectionStrings__DefaultConnection` | Yes | Full runtime connection string |
 | `SqlDeployUsername` | Yes | SQL deployment principal |
 | `SqlDeployPassword` | Yes | SQL deployment principal password |
-| `ActiveDirectory__BindUsername` | Yes | AD bind username |
-| `ActiveDirectory__BindPassword` | Yes | AD bind password |
 | `ElasticStack__Enabled` | No | `true` or `false` |
 | `ElasticStack__UseElasticCloud` | No | `true` or `false` |
 | `ElasticStack__CloudId` | Yes | Required only for Elastic Cloud |
@@ -144,8 +138,6 @@ If you use Azure DevOps linked variable groups backed by Azure Key Vault:
 - Link only secrets from Key Vault.
 - Use Key Vault secret names that map cleanly to configuration keys, for example:
   - `ConnectionStrings--DefaultConnection`
-  - `ActiveDirectory--BindUsername`
-  - `ActiveDirectory--BindPassword`
   - `ElasticStack--ApiKey`
   - `ElasticStack--CloudId`
   - `ElasticStack--Username`
@@ -196,8 +188,6 @@ Build stage publishes one artifact named `drop` containing:
 - Optionally set app pool environment variables:
   - `ASPNETCORE_ENVIRONMENT`
   - `ConnectionStrings__DefaultConnection`
-  - `ActiveDirectory__BindUsername`
-  - `ActiveDirectory__BindPassword`
   - `ElasticStack__*`
   - `AzureKeyVault__*`
 - Start app pool and site
