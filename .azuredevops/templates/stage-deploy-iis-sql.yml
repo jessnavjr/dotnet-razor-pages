@@ -1,0 +1,129 @@
+parameters:
+  stageName: Deploy_Dev
+  displayName: Deploy to Dev
+  dependsOn: BuildAndTest
+  variableGroup: drp-dev
+  environmentName: drp-dev
+  deploymentName: DeployDev
+  deploymentDisplayName: Deploy Dev (IIS + SQL)
+  artifactName: drop
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    dependsOn: ${{ parameters.dependsOn }}
+    condition: succeeded()
+    variables:
+      - group: ${{ parameters.variableGroup }}
+
+    jobs:
+      - deployment: ${{ parameters.deploymentName }}
+        displayName: ${{ parameters.deploymentDisplayName }}
+        environment: ${{ parameters.environmentName }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: current
+                  artifact: ${{ parameters.artifactName }}
+
+                - powershell: |
+                    $artifactRoot = "$(Pipeline.Workspace)\${{ parameters.artifactName }}"
+                    $sqlRoot = Join-Path $artifactRoot "sql"
+                    $dbMode = "$(DbDeployMode)"
+
+                    if ([string]::IsNullOrWhiteSpace($dbMode)) {
+                      $dbMode = "SqlScripts"
+                    }
+
+                    Write-Host "DB deploy mode: $dbMode"
+
+                    if ($dbMode -eq "DacPac") {
+                      $dacpac = Get-ChildItem -Path $sqlRoot -Filter *.dacpac -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+                      if ($null -eq $dacpac) {
+                        Write-Host "No DACPAC found. Skipping DB deployment."
+                        exit 0
+                      }
+
+                      $sqlPackage = "${env:ProgramFiles}\Microsoft SQL Server\160\DAC\bin\SqlPackage.exe"
+                      if (-not (Test-Path $sqlPackage)) {
+                        throw "SqlPackage.exe not found at expected path: $sqlPackage"
+                      }
+
+                      & $sqlPackage /Action:Publish /SourceFile:"$($dacpac.FullName)" /TargetServerName:"$(SqlServerInstance)" /TargetDatabaseName:"$(SqlDatabaseName)" /TargetUser:"$(SqlDeployUsername)" /TargetPassword:"$(SqlDeployPassword)"
+                    }
+                    else {
+                      $scripts = Get-ChildItem -Path $sqlRoot -Filter *.sql -Recurse -ErrorAction SilentlyContinue | Sort-Object FullName
+
+                      if ($scripts.Count -eq 0) {
+                        Write-Host "No SQL scripts found. Skipping DB deployment."
+                        exit 0
+                      }
+
+                      foreach ($script in $scripts) {
+                        Write-Host "Running SQL script: $($script.FullName)"
+                        & sqlcmd -S "$(SqlServerInstance)" -d "$(SqlDatabaseName)" -U "$(SqlDeployUsername)" -P "$(SqlDeployPassword)" -b -i "$($script.FullName)"
+                      }
+                    }
+                  displayName: Deploy Database
+
+                - powershell: |
+                    Import-Module WebAdministration
+
+                    $artifactRoot = "$(Pipeline.Workspace)\${{ parameters.artifactName }}"
+                    $zipPath = Join-Path $artifactRoot "web.zip"
+
+                    if (-not (Test-Path $zipPath)) {
+                      throw "web.zip not found: $zipPath"
+                    }
+
+                    $siteName = "$(IisSiteName)"
+                    $appPool = "$(IisAppPoolName)"
+                    $deployPath = "$(WebDeployPath)"
+                    $bindingPort = "$(IisBindingPort)"
+                    $bindingHost = "$(IisBindingHost)"
+
+                    if (-not (Test-Path $deployPath)) {
+                      New-Item -ItemType Directory -Path $deployPath -Force | Out-Null
+                    }
+
+                    $backupRoot = Join-Path $deployPath "_backups"
+                    New-Item -ItemType Directory -Path $backupRoot -Force | Out-Null
+
+                    $timestamp = Get-Date -Format "yyyyMMdd-HHmmss"
+                    $backupPath = Join-Path $backupRoot $timestamp
+
+                    $existingFiles = Get-ChildItem -Path $deployPath -Force | Where-Object { $_.Name -ne "_backups" }
+                    if ($existingFiles.Count -gt 0) {
+                      New-Item -ItemType Directory -Path $backupPath -Force | Out-Null
+                      foreach ($item in $existingFiles) {
+                        Move-Item -Path $item.FullName -Destination $backupPath -Force
+                      }
+                    }
+
+                    Expand-Archive -Path $zipPath -DestinationPath $deployPath -Force
+
+                    if (-not (Test-Path "IIS:\AppPools\$appPool")) {
+                      New-WebAppPool -Name $appPool | Out-Null
+                    }
+
+                    Set-ItemProperty "IIS:\AppPools\$appPool" -Name managedRuntimeVersion -Value ""
+
+                    if (-not (Test-Path "IIS:\Sites\$siteName")) {
+                      New-Website -Name $siteName -PhysicalPath $deployPath -ApplicationPool $appPool -Port $bindingPort -IPAddress "*" -HostHeader $bindingHost | Out-Null
+                    }
+                    else {
+                      Set-ItemProperty "IIS:\Sites\$siteName" -Name applicationPool -Value $appPool
+                      Set-ItemProperty "IIS:\Sites\$siteName" -Name physicalPath -Value $deployPath
+                    }
+
+                    $appCmd = "$env:windir\System32\inetsrv\appcmd.exe"
+                    & $appCmd set config -section:system.applicationHost/applicationPools "/[name='$appPool'].environmentVariables.[name='ASPNETCORE_ENVIRONMENT',value='$(AspNetCoreEnvironment)']" /commit:apphost | Out-Null
+
+                    if (-not [string]::IsNullOrWhiteSpace("$(ConnectionStrings__DefaultConnection)")) {
+                      & $appCmd set config -section:system.applicationHost/applicationPools "/[name='$appPool'].environmentVariables.[name='ConnectionStrings__DefaultConnection',value='$(ConnectionStrings__DefaultConnection)']" /commit:apphost | Out-Null
+                    }
+
+                    Start-WebAppPool -Name $appPool
+                    Start-Website -Name $siteName
+                  displayName: Deploy Web to IIS

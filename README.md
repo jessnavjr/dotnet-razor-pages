@@ -1,5 +1,13 @@
 # DotNet Razor Pages
 
+## Solution Documentation
+
+Enterprise-style documentation is available in the `docs` folder:
+
+- Requirements specification: `docs/REQUIREMENTS.md`
+- Architecture and diagrams: `docs/ARCHITECTURE.md`
+- Documentation index: `docs/README.md`
+
 ## Local SQL Server (Docker)
 
 This project is configured to use a local SQL Server container for development.

@@ -1,0 +1,63 @@
+parameters:
+  stageName: BuildAndTest
+  displayName: Build and Test
+  buildConfiguration: Release
+  artifactName: drop
+  webProject: DotNetRazorPages.Web/DotNetRazorPages.Web.csproj
+
+stages:
+  - stage: ${{ parameters.stageName }}
+    displayName: ${{ parameters.displayName }}
+    jobs:
+      - job: Build
+        displayName: Build Solution and Publish Artifact
+        pool:
+          vmImage: windows-latest
+
+        steps:
+          - checkout: self
+
+          - task: UseDotNet@2
+            displayName: Use .NET SDK 10.x
+            inputs:
+              packageType: sdk
+              version: 10.x
+
+          - script: dotnet restore DotNetRazorPages.sln
+            displayName: Restore
+
+          - script: dotnet build DotNetRazorPages.sln -c ${{ parameters.buildConfiguration }} --no-restore
+            displayName: Build
+
+          - script: dotnet test DotNetRazorPages.sln -c ${{ parameters.buildConfiguration }} --no-build
+            displayName: Test
+
+          - script: dotnet publish ${{ parameters.webProject }} -c ${{ parameters.buildConfiguration }} -o $(Build.ArtifactStagingDirectory)\web
+            displayName: Publish Web App
+
+          - task: ArchiveFiles@2
+            displayName: Archive Web Publish Output
+            inputs:
+              rootFolderOrFile: $(Build.ArtifactStagingDirectory)\web
+              includeRootFolder: false
+              archiveType: zip
+              archiveFile: $(Build.ArtifactStagingDirectory)\web.zip
+              replaceExistingArchive: true
+
+          - powershell: |
+              $sqlOut = "$(Build.ArtifactStagingDirectory)\sql"
+              New-Item -ItemType Directory -Path $sqlOut -Force | Out-Null
+
+              if (Test-Path "$(Build.SourcesDirectory)\database") {
+                Copy-Item "$(Build.SourcesDirectory)\database\*" $sqlOut -Recurse -Force
+                Write-Host "Copied database assets from /database"
+              } else {
+                Write-Host "No /database folder found. DB deploy step will skip unless assets exist on target."
+              }
+            displayName: Collect Database Assets
+
+          - task: PublishPipelineArtifact@1
+            displayName: Publish Deployment Artifact
+            inputs:
+              targetPath: $(Build.ArtifactStagingDirectory)
+              artifact: ${{ parameters.artifactName }}

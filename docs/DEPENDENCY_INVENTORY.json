@@ -1,0 +1,129 @@
+{
+  "documentId": "DRP-UPG-INVENTORY-001",
+  "version": "1.0",
+  "generatedOn": "2026-03-18",
+  "nextReviewDate": "2026-06-30",
+  "owners": [
+    "Engineering Lead",
+    "Operations Lead",
+    "Security Lead"
+  ],
+  "policies": {
+    "reviewCadence": "quarterly",
+    "requiredMonthsBeforeEolForMajorUpgrade": 6,
+    "blockOnPastDueReview": true,
+    "blockOnDependencyPastEol": true
+  },
+  "dependencies": [
+    {
+      "name": ".NET Runtime/SDK",
+      "category": "runtime",
+      "currentVersion": "10.0.x",
+      "source": "DotNetRazorPages.*.csproj",
+      "vendor": "Microsoft",
+      "lifecycleUrl": "https://dotnet.microsoft.com/platform/support/policy/dotnet-core",
+      "targetTrack": "LTS",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "ASP.NET Core",
+      "category": "framework",
+      "currentVersion": "10.0.x",
+      "source": "DotNetRazorPages.Web",
+      "vendor": "Microsoft",
+      "lifecycleUrl": "https://dotnet.microsoft.com/platform/support/policy/aspnet",
+      "targetTrack": "LTS",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "EF Core SQL Server Provider",
+      "category": "data-access",
+      "currentVersion": "10.0.5",
+      "source": "DotNetRazorPages.Data/DotNetRazorPages.Data.csproj",
+      "vendor": "Microsoft",
+      "lifecycleUrl": "https://learn.microsoft.com/ef/core/what-is-new/",
+      "targetTrack": "Aligned with .NET major",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "SQL Server Engine",
+      "category": "database",
+      "currentVersion": "Local dev via Azure SQL Edge container",
+      "source": "README.md",
+      "vendor": "Microsoft",
+      "lifecycleUrl": "https://learn.microsoft.com/lifecycle/products/?products=sql-server",
+      "targetTrack": "Supported SQL Server or Azure SQL",
+      "eolDate": null,
+      "status": "needs-standardization"
+    },
+    {
+      "name": "Windows Server (if self-hosted)",
+      "category": "os-platform",
+      "currentVersion": "Environment dependent",
+      "source": "Hosting environment",
+      "vendor": "Microsoft",
+      "lifecycleUrl": "https://learn.microsoft.com/lifecycle/products/?products=windows-server",
+      "targetTrack": "N-1 supported baseline",
+      "eolDate": null,
+      "status": "inventory-required"
+    },
+    {
+      "name": "Node.js",
+      "category": "build-toolchain",
+      "currentVersion": "22 (CI)",
+      "source": ".github/workflows/ci.yml",
+      "vendor": "OpenJS Foundation",
+      "lifecycleUrl": "https://endoflife.date/nodejs",
+      "targetTrack": "Active LTS",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "TypeScript",
+      "category": "frontend-tooling",
+      "currentVersion": "5.8.2",
+      "source": "DotNetRazorPages.Web/package.json",
+      "vendor": "Microsoft",
+      "lifecycleUrl": "https://github.com/microsoft/TypeScript/releases",
+      "targetTrack": "Current stable",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "Vitest",
+      "category": "frontend-testing",
+      "currentVersion": "3.1.1",
+      "source": "DotNetRazorPages.Web/package.json",
+      "vendor": "Vitest",
+      "lifecycleUrl": "https://github.com/vitest-dev/vitest/releases",
+      "targetTrack": "Current stable",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "JSDOM",
+      "category": "frontend-testing",
+      "currentVersion": "26.1.0",
+      "source": "DotNetRazorPages.Web/package.json",
+      "vendor": "jsdom",
+      "lifecycleUrl": "https://github.com/jsdom/jsdom/releases",
+      "targetTrack": "Current stable",
+      "eolDate": null,
+      "status": "track"
+    },
+    {
+      "name": "QuestPDF",
+      "category": "library",
+      "currentVersion": "2026.2.3",
+      "source": "DotNetRazorPages.Services/DotNetRazorPages.Services.csproj",
+      "vendor": "QuestPDF",
+      "lifecycleUrl": "https://github.com/QuestPDF/QuestPDF/releases",
+      "targetTrack": "Current stable",
+      "eolDate": null,
+      "status": "track"
+    }
+  ]
+}

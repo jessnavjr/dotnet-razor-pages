@@ -184,17 +184,22 @@ public class EndpointsFunctionalTests
     }
 
     [Fact]
-    public async Task ProductionEnvironment_PrivacyPage_ReturnsNotFound()
+    public async Task DevelopmentEnvironment_EmployeeDetailsExportPdf_ReturnsPdfFile()
     {
-        await using var factory = new TestWebApplicationFactory("Production");
-        using var client = factory.CreateClient(new WebApplicationFactoryClientOptions
-        {
-            AllowAutoRedirect = false
-        });
+        await using var factory = new TestWebApplicationFactory("Development");
+        using var client = factory.CreateClient();
 
-        var response = await client.GetAsync("/Privacy");
+        var response = await client.GetAsync("/EmployeeDetail/101?handler=ExportPdf&id=101");
 
-        Assert.Equal(System.Net.HttpStatusCode.NotFound, response.StatusCode);
+        response.EnsureSuccessStatusCode();
+        Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
+        Assert.NotNull(response.Content.Headers.ContentDisposition);
+
+        var pdfBytes = await response.Content.ReadAsByteArrayAsync();
+        Assert.NotEmpty(pdfBytes);
+
+        var pdfSignature = System.Text.Encoding.ASCII.GetString(pdfBytes, 0, Math.Min(4, pdfBytes.Length));
+        Assert.Equal("%PDF", pdfSignature);
     }
 
     [Fact]

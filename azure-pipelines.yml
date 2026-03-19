@@ -1,0 +1,58 @@
+name: $(Date:yyyyMMdd).$(Rev:r)
+
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  BuildConfiguration: Release
+  ArtifactName: drop
+  WebProject: DotNetRazorPages.Web/DotNetRazorPages.Web.csproj
+
+stages:
+  - template: .azuredevops/templates/stage-build.yml
+    parameters:
+      stageName: BuildAndTest
+      displayName: Build and Test
+      buildConfiguration: $(BuildConfiguration)
+      artifactName: $(ArtifactName)
+      webProject: $(WebProject)
+
+  - template: .azuredevops/templates/stage-deploy-iis-sql.yml
+    parameters:
+      stageName: Deploy_Dev
+      displayName: Deploy to Dev
+      dependsOn: BuildAndTest
+      variableGroup: drp-dev
+      environmentName: drp-dev
+      deploymentName: DeployDev
+      deploymentDisplayName: Deploy Dev (IIS + SQL)
+      artifactName: $(ArtifactName)
+
+  - template: .azuredevops/templates/stage-deploy-iis-sql.yml
+    parameters:
+      stageName: Deploy_Test
+      displayName: Deploy to Test
+      dependsOn: Deploy_Dev
+      variableGroup: drp-test
+      environmentName: drp-test
+      deploymentName: DeployTest
+      deploymentDisplayName: Deploy Test (IIS + SQL)
+      artifactName: $(ArtifactName)
+
+  - template: .azuredevops/templates/stage-deploy-iis-sql.yml
+    parameters:
+      stageName: Deploy_Prod
+      displayName: Deploy to Prod
+      dependsOn: Deploy_Test
+      variableGroup: drp-prod
+      environmentName: drp-prod
+      deploymentName: DeployProd
+      deploymentDisplayName: Deploy Prod (IIS + SQL)
+      artifactName: $(ArtifactName)

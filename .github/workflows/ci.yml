@@ -35,6 +35,64 @@ jobs:
           cache: npm
           cache-dependency-path: DotNetRazorPages.Web/package-lock.json
 
+      - name: Validate dependency lifecycle inventory
+        run: |
+          node -e "
+          const fs = require('fs');
+          const path = 'docs/DEPENDENCY_INVENTORY.json';
+          const raw = fs.readFileSync(path, 'utf8');
+          const data = JSON.parse(raw);
+
+          const errors = [];
+          const today = new Date();
+
+          if (!data.nextReviewDate) {
+            errors.push('nextReviewDate is required in docs/DEPENDENCY_INVENTORY.json');
+          } else {
+            const reviewDate = new Date(data.nextReviewDate + 'T00:00:00Z');
+            if (Number.isNaN(reviewDate.getTime())) {
+              errors.push('nextReviewDate is not a valid date: ' + data.nextReviewDate);
+            } else if (reviewDate < today) {
+              errors.push('Dependency lifecycle review is past due. nextReviewDate=' + data.nextReviewDate);
+            }
+          }
+
+          const deps = Array.isArray(data.dependencies) ? data.dependencies : [];
+          if (deps.length === 0) {
+            errors.push('dependencies must contain at least one dependency');
+          }
+
+          for (const dep of deps) {
+            if (!dep.name) {
+              errors.push('Dependency entry missing name');
+              continue;
+            }
+
+            if (!dep.currentVersion) {
+              errors.push('Dependency ' + dep.name + ' is missing currentVersion');
+            }
+
+            if (dep.eolDate) {
+              const eol = new Date(dep.eolDate + 'T00:00:00Z');
+              if (Number.isNaN(eol.getTime())) {
+                errors.push('Dependency ' + dep.name + ' has invalid eolDate: ' + dep.eolDate);
+              } else if (eol < today) {
+                errors.push('Dependency ' + dep.name + ' is past EOL: ' + dep.eolDate);
+              }
+            }
+          }
+
+          if (errors.length > 0) {
+            console.error('Dependency lifecycle policy check failed:');
+            for (const err of errors) {
+              console.error('- ' + err);
+            }
+            process.exit(1);
+          }
+
+          console.log('Dependency lifecycle policy check passed.');
+          "
+
       - name: Install web dependencies
         working-directory: DotNetRazorPages.Web
         run: npm ci
