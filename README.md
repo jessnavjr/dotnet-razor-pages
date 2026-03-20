@@ -4,8 +4,8 @@
 
 Enterprise-style documentation is available in the `docs` folder:
 
-- Requirements specification: `docs/REQUIREMENTS.md`
-- Architecture and diagrams: `docs/ARCHITECTURE.md`
+- Requirements specification: `docs/requirements.md`
+- Architecture and diagrams: `docs/architecture.md`
 - Documentation index: `docs/README.md`
 
 ## Local SQL Server (Docker)

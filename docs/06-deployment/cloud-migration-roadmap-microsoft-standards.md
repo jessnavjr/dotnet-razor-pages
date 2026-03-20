@@ -235,9 +235,9 @@ Gate criteria examples:
 5. Add CI quality/security gates for build and test plan compliance.
 
 ## 12. Related Documents
-- docs/SECURITY_SUMMARY_AND_REVIEW.md
-- docs/TEST_PLAN.md
-- docs/SYSTEMS_ARCHITECTURE.md
-- docs/ARCHITECTURE.md
-- docs/REQUIREMENTS.md
-- docs/BUSINESS_REQUIREMENTS.md
+- docs/security-summary-and-review.md
+- docs/test-plan.md
+- docs/SYSTEMS_architecture.md
+- docs/architecture.md
+- docs/requirements.md
+- docs/business-requirements.md

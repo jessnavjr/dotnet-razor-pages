@@ -169,9 +169,9 @@ Coverage targets:
 - [ ] Security-sensitive flows verified (authz, export access, error behavior)
 
 ## 16. Related Documents
-- `docs/REQUIREMENTS.md`
-- `docs/ARCHITECTURE.md`
-- `docs/SYSTEMS_ARCHITECTURE.md`
-- `docs/USER_FLOWS.md`
-- `docs/DATA_FLOW_CHART.md`
-- `docs/SECURITY_SUMMARY_AND_REVIEW.md`
+- `docs/requirements.md`
+- `docs/architecture.md`
+- `docs/SYSTEMS_architecture.md`
+- `docs/user-flows.md`
+- `docs/data-flow-chart.md`
+- `docs/security-summary-and-review.md`

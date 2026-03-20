@@ -335,8 +335,8 @@ That combination is more valuable than deep specialization in a single area.
 
 ## Related Documents
 
-- `docs/06-deployment/PRODUCTION_SUPPORT_RUNBOOK.md`
-- `docs/06-deployment/DEPLOYMENT_PLAN_AZDO_IIS_SQL.md`
-- `docs/05-testing/TEST_PLAN.md`
-- `docs/01-architecture/SYSTEMS_ARCHITECTURE.md`
-- `docs/08-reference/SECURITY_SUMMARY_AND_REVIEW.md`
+- `docs/06-deployment/production-support-runbook.md`
+- `docs/06-deployment/deployment-plan-azdo-iis-sql.md`
+- `docs/05-testing/test-plan.md`
+- `docs/01-architecture/SYSTEMS_architecture.md`
+- `docs/08-reference/security-summary-and-review.md`

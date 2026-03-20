@@ -118,6 +118,6 @@ npm run test:ts:ci
 ## Related Docs
 
 - `../README.md` - solution-level local setup
-- `../docs/README_ORGANIZATION.md` - documentation index
-- `../docs/06-deployment/DEPLOYMENT_PLAN_AZDO_IIS_SQL.md` - deployment model
-- `../docs/08-reference/ADMIN_ROLE_IMPLEMENTATION.md` - admin auth notes
+- `../docs/readme-organization.md` - documentation index
+- `../docs/06-deployment/deployment-plan-azdo-iis-sql.md` - deployment model
+- `../docs/08-reference/admin-role-implementation.md` - admin auth notes

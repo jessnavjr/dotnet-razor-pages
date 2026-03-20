@@ -144,7 +144,7 @@ flowchart LR
 - Role-based authorization controls route access for admin and directory features.
 
 ## 8. Related Documents
-- User flows: docs/USER_FLOWS.md
-- Requirements: docs/REQUIREMENTS.md
-- Architecture: docs/ARCHITECTURE.md
-- Systems architecture: docs/SYSTEMS_ARCHITECTURE.md
+- User flows: docs/user-flows.md
+- Requirements: docs/requirements.md
+- Architecture: docs/architecture.md
+- Systems architecture: docs/SYSTEMS_architecture.md

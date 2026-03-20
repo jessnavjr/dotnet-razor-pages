@@ -73,6 +73,6 @@ Layering rule:
 4. Expand traceability between requirements and test cases for release governance.
 
 ## Reference Documents
-- Requirements: `docs/REQUIREMENTS.md`
-- Architecture and diagrams: `docs/ARCHITECTURE.md`
-- Admin implementation notes: `docs/08-reference/ADMIN_ROLE_IMPLEMENTATION.md`
+- Requirements: `docs/requirements.md`
+- Architecture and diagrams: `docs/architecture.md`
+- Admin implementation notes: `docs/08-reference/admin-role-implementation.md`

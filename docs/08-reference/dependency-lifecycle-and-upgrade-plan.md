@@ -184,8 +184,8 @@ Important:
   - Critical CVE affecting stack dependencies
 
 ## 14. Related Documents
-- `docs/CLOUD_MIGRATION_ROADMAP_MICROSOFT_STANDARDS.md`
-- `docs/SECURITY_SUMMARY_AND_REVIEW.md`
-- `docs/TEST_PLAN.md`
-- `docs/SYSTEMS_ARCHITECTURE.md`
-- `docs/ASP_NET_RAZOR_PAGES_ENTERPRISE_TEMPLATE.md`
+- `docs/cloud-migration-roadmap-microsoft-standards.md`
+- `docs/security-summary-and-review.md`
+- `docs/test-plan.md`
+- `docs/SYSTEMS_architecture.md`
+- `docs/asp-net-razor-pages-enterprise-template.md`

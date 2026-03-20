@@ -51,7 +51,7 @@ Example placeholders:
 - `Roles` and `Users` for production identity persistence (if introduced)
 
 ## 6. Related Documents
-- `docs/SYSTEMS_ARCHITECTURE.md`
-- `docs/DATA_FLOW_CHART.md`
-- `docs/REQUIREMENTS.md`
-- `docs/BUSINESS_REQUIREMENTS.md`
+- `docs/SYSTEMS_architecture.md`
+- `docs/data-flow-chart.md`
+- `docs/requirements.md`
+- `docs/business-requirements.md`

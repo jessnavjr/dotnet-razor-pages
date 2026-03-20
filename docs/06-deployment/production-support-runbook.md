@@ -487,11 +487,11 @@ npm run test:ts
 
 ## 20. Related Documents
 
-- [Deployment Plan](DEPLOYMENT_PLAN_AZDO_IIS_SQL.md)
-- [Cloud Migration Roadmap](CLOUD_MIGRATION_ROADMAP_MICROSOFT_STANDARDS.md)
-- [Test Plan](../05-testing/TEST_PLAN.md)
-- [Security Summary](../08-reference/SECURITY_SUMMARY_AND_REVIEW.md)
-- [Systems Architecture](../01-architecture/SYSTEMS_ARCHITECTURE.md)
+- [Deployment Plan](deployment-plan-azdo-iis-sql.md)
+- [Cloud Migration Roadmap](cloud-migration-roadmap-microsoft-standards.md)
+- [Test Plan](../05-testing/test-plan.md)
+- [Security Summary](../08-reference/security-summary-and-review.md)
+- [Systems Architecture](../01-architecture/SYSTEMS_architecture.md)
 
 ## 21. Revision History
 

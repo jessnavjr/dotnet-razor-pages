@@ -236,6 +236,6 @@ Deployment recommendations:
 - AD-004: QuestPDF selected for server-side PDF generation
 
 ## 15. Related Documents
-- Requirements specification: `docs/REQUIREMENTS.md`
-- Solution architecture overview: `docs/ARCHITECTURE.md`
-- One-page stakeholder summary: `docs/ONE_PAGE_SUMMARY.md`
+- Requirements specification: `docs/requirements.md`
+- Solution architecture overview: `docs/architecture.md`
+- One-page stakeholder summary: `docs/one-page-summary.md`

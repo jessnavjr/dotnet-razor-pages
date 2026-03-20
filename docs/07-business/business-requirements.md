@@ -134,9 +134,9 @@ Acceptance indicators:
 - Security review actions are tracked with agreed remediation plan.
 
 ## 12. Traceability to Existing Artifacts
-- Detailed system requirements: `docs/REQUIREMENTS.md`
-- Architecture context: `docs/ARCHITECTURE.md`, `docs/SYSTEMS_ARCHITECTURE.md`
-- UX context: `docs/WIREFRAMES.md`, `docs/USER_FLOWS.md`
-- Data movement context: `docs/DATA_FLOW_CHART.md`
-- Security posture: `docs/SECURITY_SUMMARY_AND_REVIEW.md`
-- Quality validation approach: `docs/TEST_PLAN.md`
+- Detailed system requirements: `docs/requirements.md`
+- Architecture context: `docs/architecture.md`, `docs/SYSTEMS_architecture.md`
+- UX context: `docs/wireframes.md`, `docs/user-flows.md`
+- Data movement context: `docs/data-flow-chart.md`
+- Security posture: `docs/security-summary-and-review.md`
+- Quality validation approach: `docs/test-plan.md`

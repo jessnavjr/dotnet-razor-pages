@@ -207,8 +207,8 @@ This document defines the primary use cases for the DotNet Razor Pages solution 
 - Directory integration use case: UC-011
 
 ## 7. Related Documents
-- docs/BUSINESS_REQUIREMENTS.md
-- docs/REQUIREMENTS.md
-- docs/USER_FLOWS.md
-- docs/WIREFRAMES.md
-- docs/TEST_PLAN.md
+- docs/business-requirements.md
+- docs/requirements.md
+- docs/user-flows.md
+- docs/wireframes.md
+- docs/test-plan.md

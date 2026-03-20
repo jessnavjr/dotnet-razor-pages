@@ -194,8 +194,8 @@ flowchart TD
 - Active Directory lookup presents success/no-result/error states correctly
 
 ## 13. Related Documents
-- One-page summary: `docs/ONE_PAGE_SUMMARY.md`
-- Requirements: `docs/REQUIREMENTS.md`
-- Architecture: `docs/ARCHITECTURE.md`
-- Systems architecture: `docs/SYSTEMS_ARCHITECTURE.md`
-- Wireframes: `docs/WIREFRAMES.md`
+- One-page summary: `docs/one-page-summary.md`
+- Requirements: `docs/requirements.md`
+- Architecture: `docs/architecture.md`
+- Systems architecture: `docs/SYSTEMS_architecture.md`
+- Wireframes: `docs/wireframes.md`

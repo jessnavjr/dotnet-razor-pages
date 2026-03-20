@@ -230,10 +230,10 @@ Template values:
 ---
 
 ## 14. Related Documents
-- docs/ONE_PAGE_SUMMARY.md
-- docs/REQUIREMENTS.md
-- docs/ARCHITECTURE.md
-- docs/SYSTEMS_ARCHITECTURE.md
-- docs/WIREFRAMES.md
-- docs/USER_FLOWS.md
-- docs/DATA_FLOW_CHART.md
+- docs/one-page-summary.md
+- docs/requirements.md
+- docs/architecture.md
+- docs/SYSTEMS_architecture.md
+- docs/wireframes.md
+- docs/user-flows.md
+- docs/data-flow-chart.md
